@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Ichtrojan\Otp\Otp;
+
 class ResetPasswordVerificationNotification extends Notification
 {
     use Queueable;
@@ -15,14 +16,16 @@ class ResetPasswordVerificationNotification extends Notification
     public $fromEmail;
     public $mailer;
     private $otp;
+
     /**
      * Create a new notification instance.
      */
     public function __construct()
     {
-        $this->message ='use the below code for resetting password';
-        $this->subject ='Password resetting';
-        $this->fromEmail ='test@storeify.com';
+        $this->message = 'use the below code for resetting password';
+        $this->subject = 'Password resetting';
+        $this->fromEmail = 'test@storeify.com';
+        $this->mailer = 'smtp';
         $this->otp = new Otp;
     }
 
@@ -41,10 +44,15 @@ class ResetPasswordVerificationNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        // Change the second parameter to a valid type string, e.g., 'numeric'
+        $otp = $this->otp->generate($notifiable->email, 'numeric',4, 60);
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+                ->mailer('smtp')
+                ->subject($this->subject)
+                ->greeting('hello ' . $notifiable->first_name)
+                ->line($this->message)
+                ->line('code: ' . $otp->token)
+                ->salutation('Best regards, Store-ify Team');
     }
 
     /**

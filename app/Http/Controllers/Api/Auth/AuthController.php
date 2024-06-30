@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Auth;
 
 use App\Models\Role;
 use App\Models\User;
@@ -29,28 +29,39 @@ class AuthController extends Controller
                 'confirmed'
             ],
             ], [
-                'password.min' => 'The password must be at least 8 characters long.',
-                'password.regex' => 'The password format is invalid. It must contain at least one lowercase letter, one uppercase letter, one digit, and one special character.',
-                'password.confirmed' => 'The password confirmation does not match.'
+                'password.min' => 'PASSWORD_INVALID_FORMAT',
+                'password.regex' => 'PASSWORD_INVALID_FORMAT',
+                'password.confirmed' => 'PASSWORD_NOT_MATCHED',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'code' => 'ERROR',
+                'data' => $validator->errors()], 422);
         }
 
         // Check if the username or email already exists
         if (User::where('username', $request->username)->exists()) {
-            return response()->json(['msg' => 'Username already exists'], 409);
+            return response()->json([
+                'code' => 'ERROR',
+                'data'=>'USERNAME_TAKEN',
+                ], 409);
         }
 
         if (User::where('email', $request->email)->exists()) {
-            return response()->json(['msg' => 'Email already exists'], 409);
+            return response()->json([
+                'code' =>'ERROR',
+                'data'=> 'EMAIL_TAKEN',
+                ], 409);
         }
 
         // Retrieve the user role
         $userRole = Role::where('name', 'user')->first();
         if (!$userRole) {
-            return response()->json(['msg' => 'User role not found'], 500);
+            return response()->json([
+                'code' =>'ERROR',
+                'data'=> 'USER_ROLE_NOT_FOUND',
+                ], 500);
         }
 
         // Attempt to create the user and catch any database-related errors
@@ -68,7 +79,7 @@ class AuthController extends Controller
             return response()->json([
                 'code' => 'SUCCESS',
                 'token' => $token,
-                'user' => $userData,
+                'data' => $userData,
             ]);
         } catch (QueryException $e) {
             return response()->json(['msg' => 'Database error: ' . $e->getMessage()], 500);
@@ -80,7 +91,9 @@ class AuthController extends Controller
 {
     // Check if user is authenticated
     if (!$request->user()) {
-        return response()->json(['msg' => 'User not authenticated'], 401);
+        return response()->json([
+            'code'=>'ERROR',
+            'data' => 'USER_NOT_AUTH'], 401);
     }
 
     // Attempt to delete the token
@@ -89,12 +102,18 @@ class AuthController extends Controller
         if ($request->user()->currentAccessToken()) {
             $request->user()->currentAccessToken()->delete();
         } else {
-            return response()->json(['msg' => 'Invalid token'], 401);
+            return response()->json([
+                'code' =>'ERROR',
+                'data'=>'INVALID_TOKEN',
+                ], 401);
         }
 
-        return response()->json(["code" => 'SUCCESS'], 200);
+        return response()->json([
+            "code" => 'SUCCESS',
+            'data'=>[]
+            ], 200);
     } catch (\Exception $e) {
-        return response()->json(['msg' => 'Logout failed: ' . $e->getMessage()], 500);
+        return response()->json(['code' => 'ERROR: ' . $e->getMessage()], 500);
     }
 }
 
@@ -111,15 +130,18 @@ class AuthController extends Controller
 
         // Check if validation fails
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json([
+                'code' => 'ERROR',
+                'data' => $validator->errors()], 422);
         }
-
         // Find user by email
         $user = User::where('email', $request->email)->first();
 
         // Check if user exists and password matches
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['msg' => 'Invalid credentials'], 401);
+            return response()->json([
+                'code' => 'ERROR',
+                'data' => 'INVALID_CREDENTIALS'], 401);
         }
 
         try {
@@ -130,7 +152,7 @@ class AuthController extends Controller
             return response()->json([
                 'code' => 'SUCCESS',
                 'token' => $token,
-                'user' => $userData
+                'data' => $userData
             ]);
         } catch (\Exception $e) {
             // Handle any unexpected exceptions during token creation
