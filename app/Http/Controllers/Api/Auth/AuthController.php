@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
@@ -75,12 +76,12 @@ class AuthController extends Controller
 
             $token = $user->createToken('auth-token')->plainTextToken;
             $userData = new UserResource($user);
-
-            return response()->json([
-                'code' => 'SUCCESS',
-                'token' => $token,
-                'data' => $userData,
-            ]);
+            return ApiResponse::success($userData,token:$token);
+            // return response()->json([
+            //     'code' => 'SUCCESS',
+            //     'token' => $token,
+            //     'data' => $userData,
+            // ]);
         } catch (QueryException $e) {
             return response()->json(['msg' => 'Database error: ' . $e->getMessage()], 500);
         } catch (\Exception $e) {
@@ -148,12 +149,12 @@ class AuthController extends Controller
             // Generate and return token on successful login
             $token = $user->createToken('auth-token')->plainTextToken;
             $userData = new UserResource($user);
-
-            return response()->json([
-                'code' => 'SUCCESS',
-                'token' => $token,
-                'data' => $userData
-            ]);
+            return ApiResponse::success($userData,token:$token);
+            // return response()->json([
+            //     'code' => 'SUCCESS',
+            //     'token' => $token,
+            //     'data' => $userData
+            // ]);
         } catch (\Exception $e) {
             // Handle any unexpected exceptions during token creation
             return response()->json(['msg' => 'Login failed: ' . $e->getMessage()], 500);

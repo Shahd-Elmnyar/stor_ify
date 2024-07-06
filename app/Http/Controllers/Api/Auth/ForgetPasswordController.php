@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Models\User;
+use App\Exceptions\Handler;
 use Illuminate\Http\Request;
+use App\Http\Responses\ApiResponse;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -18,14 +20,18 @@ class ForgetPasswordController extends Controller
             $validator = Validator::make($request->all(), [
                 'email' => 'required|email|exists:users,email',
             ], [
+                'email.required' => 'EMAIL_REQUIRED',
+                'email.email' => 'INVALID_EMAIL',
                 'email.exists' => 'USER_NOT_FOUND',
             ]);
-
+            // if ($validator->fails()) {
+            //     return response()->json([
+            //         'code' => 'ERROR',
+            //         'data' => $validator->errors()->getMessages(),
+            //     ], 422);
+            // }
             if ($validator->fails()) {
-                return response()->json([
-                    'code' => 'ERROR',
-                    'data' => $validator->errors()
-                ], 422);
+                return ApiResponse::error('VALIDATION_ERROR', 422);
             }
 
             $user = User::where('email', $request->email)->first();
@@ -37,11 +43,11 @@ class ForgetPasswordController extends Controller
             }
 
             $user->notify(new ResetPasswordVerificationNotification());
-
-            return response()->json([
-                'code' => 'SUCCESS',
-                'data' => [],
-            ], 200);
+            return ApiResponse::success();
+            // return response()->json([
+            //     'code' => 'SUCCESS',
+            //     'data' => [],
+            // ], 200);
         } catch (\Exception $e) {
             Log::error('Error during forget password process: ' . $e->getMessage());
 
