@@ -17,8 +17,8 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'username' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
+            'username' => ['required','string','min:4','max:255','unique:users'],
+            'email' => ['required','email','max:255','unique:users'],
             'password' => [
                 'required',
                 'string',
@@ -30,10 +30,16 @@ class AuthController extends Controller
                 'confirmed'
             ],
             ], [
+                'username.required' => 'USERNAME_REQUIRED',
+                'username.min' => 'USERNAME_INVALID_FORMAT',
+                'username.unique' => 'USERNAME_TAKEN',
+                'email.required' => 'EMAIL_REQUIRED',
+                'email.email' => 'EMAIL_INVALID_FORMAT',
+                'email.unique' => 'EMAIL_TAKEN',
+                'password.required' =>  'PASSWORD_REQUIRED',
                 'password.min' => 'PASSWORD_INVALID_FORMAT',
                 'password.regex' => 'PASSWORD_INVALID_FORMAT',
                 'password.confirmed' => 'PASSWORD_NOT_MATCHED',
-                'email.email' => 'EMAIL_INVALID_FORMAT',
         ]);
 
         if ($validator->fails()) {
@@ -43,19 +49,19 @@ class AuthController extends Controller
         }
 
         // Check if the username or email already exists
-        if (User::where('username', $request->username)->exists()) {
-            return response()->json([
-                'code' => 'ERROR',
-                'data'=>'USERNAME_TAKEN',
-                ], 409);
-        }
+        // if (User::where('username', $request->username)->exists()) {
+        //     return response()->json([
+        //         'code' => 'ERROR',
+        //         'data'=>'USERNAME_TAKEN',
+        //         ], 409);
+        // }
 
-        if (User::where('email', $request->email)->exists()) {
-            return response()->json([
-                'code' =>'ERROR',
-                'data'=> 'EMAIL_TAKEN',
-                ], 409);
-        }
+        // if (User::where('email', $request->email)->exists()) {
+        //     return response()->json([
+        //         'code' =>'ERROR',
+        //         'data'=> 'EMAIL_TAKEN',
+        //         ], 409);
+        // }
 
         // Retrieve the user role
         $userRole = Role::where('name', 'user')->first();
@@ -126,13 +132,25 @@ class AuthController extends Controller
     {
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email|max:255',
-            'password' => 'required|string|min:5|max:30'
-        ],[
-            'password.min' => 'PASSWORD_INVALID_FORMAT',
+            'email' => ['required','email','max:255','unique:users'],
+            'password' => [
+                'required',
+                'string',
+                'min:8',              // must be at least 8 characters long
+                'regex:/[a-z]/',      // must contain at least one lowercase letter
+                'regex:/[A-Z]/',      // must contain at least one uppercase letter
+                'regex:/\d/',         // must contain at least one digit
+                'regex:/[@$!%*#?&]/', // must contain at least one special character
+                'confirmed'
+            ],
+            ], [
+                'email.required' => 'EMAIL_REQUIRED',
+                'email.email' => 'EMAIL_INVALID_FORMAT',
+                'email.unique' => 'EMAIL_TAKEN',
+                'password.required' =>  'PASSWORD_REQUIRED',
+                'password.min' => 'PASSWORD_INVALID_FORMAT',
                 'password.regex' => 'PASSWORD_INVALID_FORMAT',
                 'password.confirmed' => 'PASSWORD_NOT_MATCHED',
-                'email.email' => 'EMAIL_INVALID_FORMAT',
         ]);
 
         // Check if validation fails
