@@ -21,19 +21,15 @@ class ForgetPasswordController extends Controller
                 'email' => 'required|email|exists:users,email',
             ], [
                 'email.required' => 'EMAIL_REQUIRED',
-                'email.email' => 'INVALID_EMAIL',
+                'email.email' => 'EMAIL_INVALID_FORMAT',
                 'email.exists' => 'USER_NOT_FOUND',
             ]);
-            // if ($validator->fails()) {
-            //     return response()->json([
-            //         'code' => 'ERROR',
-            //         'data' => $validator->errors()->getMessages(),
-            //     ], 422);
-            // }
             if ($validator->fails()) {
-                return ApiResponse::error('VALIDATION_ERROR', 422);
+                return response()->json([
+                    'code' => 'ERROR',
+                    'data' => $validator->errors()->first(),
+                ], 422);
             }
-
             $user = User::where('email', $request->email)->first();
             if (!$user) {
                 return response()->json([
@@ -43,11 +39,10 @@ class ForgetPasswordController extends Controller
             }
 
             $user->notify(new ResetPasswordVerificationNotification());
-            return ApiResponse::success();
-            // return response()->json([
-            //     'code' => 'SUCCESS',
-            //     'data' => [],
-            // ], 200);
+            return response()->json([
+                'code' => 'SUCCESS',
+                'data' => (object)[],
+            ], 200);
         } catch (\Exception $e) {
             Log::error('Error during forget password process: ' . $e->getMessage());
 

@@ -132,7 +132,7 @@ class AuthController extends Controller
     {
         // Validate the request
         $validator = Validator::make($request->all(), [
-            'email' => ['required','email','max:255','unique:users'],
+            'email' => ['required','email','max:255','exists:users,email'],
             'password' => [
                 'required',
                 'string',
@@ -141,16 +141,15 @@ class AuthController extends Controller
                 'regex:/[A-Z]/',      // must contain at least one uppercase letter
                 'regex:/\d/',         // must contain at least one digit
                 'regex:/[@$!%*#?&]/', // must contain at least one special character
-                'confirmed'
             ],
             ], [
                 'email.required' => 'EMAIL_REQUIRED',
                 'email.email' => 'EMAIL_INVALID_FORMAT',
-                'email.unique' => 'EMAIL_TAKEN',
+                'email.exists' => 'USER_NOT_FOUND',
                 'password.required' =>  'PASSWORD_REQUIRED',
                 'password.min' => 'PASSWORD_INVALID_FORMAT',
                 'password.regex' => 'PASSWORD_INVALID_FORMAT',
-                'password.confirmed' => 'PASSWORD_NOT_MATCHED',
+
         ]);
 
         // Check if validation fails

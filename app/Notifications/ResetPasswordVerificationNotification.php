@@ -49,10 +49,14 @@ class ResetPasswordVerificationNotification extends Notification
         return (new MailMessage)
                 ->mailer('smtp')
                 ->subject($this->subject)
-                ->greeting('hello ' . $notifiable->first_name)
-                ->line($this->message)
-                ->line('code: ' . $otp->token)
-                ->salutation('Best regards, Store-ify Team');
+                ->view('emails.reset_password',[
+                    'otp' => $otp->token,
+                    'username' => $notifiable->username
+                ]);
+                // ->greeting('hello ' . $notifiable->username)
+                // ->line($this->message)
+                // ->line('code: ' . $otp->token)
+                // ->salutation('Best regards, Store-ify Team');
     }
 
     /**

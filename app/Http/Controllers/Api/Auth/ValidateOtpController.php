@@ -27,29 +27,35 @@ class ValidateOtpController extends Controller
                 'otp' => ['required', 'max:4'],
             ], [
                 'email.required' => 'EMAIL_REQUIRED',
-                'otp.required' => 'OTP_REQUIRED',
-                'otp.max' => 'INVALID_OTP',
                 'email.email' => 'INVALID_EMAIL',
                 'email.exists' => 'USER_NOT_FOUND',
+                'otp.required' => 'OTP_REQUIRED',
+                'otp.max' => 'INVALID_OTP_FORMAT',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
                     'code' => 'ERROR',
-                    'data' => $validator->errors()
+                    'data' => $validator->errors()->first()
                 ], 422);
             }
 
             $otp2 = $this->otp->validate($request->email, $request->otp);
             if (!$otp2->status) {
-                $msg = $otp2->message == "OTP is not valid" ? 'INVALID_OTP' : $otp2->message;
-                return response()->json(['code' => 'ERROR', 'data' => $msg], 401);
+                $msg = $otp2->message == "OTP is not valid" || $otp2->message =="OTP does not exist" ? 'INVALID_OTP' : $otp2->message;
+                return response()->json([
+                    'code' => 'ERROR',
+                    'data' => $msg
+                ], 401);
             }
 
             $user = User::where('email', $request->email)->first();
             $user->update(['otp_validated' => true]);
 
-            return response()->json(['code' => 'SUCCESS', 'data' => []], 200);
+            return response()->json([
+                'code' => 'SUCCESS',
+                'data' => (object)[]
+            ], 200);
         } catch (\Exception $e) {
             Log::error('Error during OTP validation process: ' . $e->getMessage());
 
