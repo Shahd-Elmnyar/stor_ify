@@ -33,12 +33,13 @@ class AuthController extends Controller
                 'password.min' => 'PASSWORD_INVALID_FORMAT',
                 'password.regex' => 'PASSWORD_INVALID_FORMAT',
                 'password.confirmed' => 'PASSWORD_NOT_MATCHED',
+                'email.email' => 'EMAIL_INVALID_FORMAT',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'code' => 'ERROR',
-                'data' => $validator->errors()], 422);
+                'data' => $validator->errors()->first()], 422);
         }
 
         // Check if the username or email already exists
@@ -127,13 +128,18 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|max:255',
             'password' => 'required|string|min:5|max:30'
+        ],[
+            'password.min' => 'PASSWORD_INVALID_FORMAT',
+                'password.regex' => 'PASSWORD_INVALID_FORMAT',
+                'password.confirmed' => 'PASSWORD_NOT_MATCHED',
+                'email.email' => 'EMAIL_INVALID_FORMAT',
         ]);
 
         // Check if validation fails
         if ($validator->fails()) {
             return response()->json([
                 'code' => 'ERROR',
-                'data' => $validator->errors()], 422);
+                'data' => $validator->errors()->first()], 422);
         }
         // Find user by email
         $user = User::where('email', $request->email)->first();
