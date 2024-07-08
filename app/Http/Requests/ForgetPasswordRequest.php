@@ -14,14 +14,14 @@ class ForgetPasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required|email|exists:users,email',
+            'email' => 'required|email|unique:users',
         ];
     }
 
     public function messages()
     {
         return [
-            'email.exists' => 'USER_NOT_FOUND',
+            'email.unique' => 'USER_NOT_FOUND',
         ];
     }
 }

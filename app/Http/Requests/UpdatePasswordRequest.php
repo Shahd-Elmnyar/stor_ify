@@ -14,7 +14,7 @@ class UpdatePasswordRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' =>['required' ,'email','exists:users'],
+            'email' =>['required' ,'email','unique:users'],
             'password' => [
                 'required',
                 'string',
@@ -32,7 +32,7 @@ class UpdatePasswordRequest extends FormRequest
         return [
             'email.required' => 'EMAIL_REQUIRED',
             'email.email' => 'INVALID_EMAIL',
-            'email.exists' => 'USER_NOT_FOUND',
+            'email.unique' => 'USER_NOT_FOUND',
             'password.required' => 'PASSWORD_REQUIRED',
             'password.min,regex' => 'PASSWORD_INVALID_FORMAT',
             'Password.confirmed' => 'PASSWORD_NOT_MATCHED',

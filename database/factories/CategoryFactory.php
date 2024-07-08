@@ -21,7 +21,7 @@ class CategoryFactory extends Factory
         return [
             'name' => fake()->word,
             'description' => fake()->sentence,
-            'img' => $i."png",
+            'img' => $i.".png",
         ];
     }
 }

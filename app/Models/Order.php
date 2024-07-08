@@ -21,11 +21,13 @@ class Order extends Model
      *
      * @var array<int, string>
      */
+
     protected $casts = [
         'delivery_date' => 'date',
-        'delivery_time' => 'time',
+        'delivery_time' => 'datetime:H:i:s', // Correct cast for time
+        'total' => 'float',
     ];
-    
+
     public function orderItems()
     {
         return $this->hasMany(OrderItem::class);

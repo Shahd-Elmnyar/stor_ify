@@ -244,3 +244,113 @@ success
     "code": "SUCCESS",
     "data": {}
 }
+
+
+home
+-------------------------------------------------------------------------------
+if user not authenticated
+
+     {
+        "code": "ERROR",
+        "data": "USER_NOT_AUTH"
+    }
+
+------------------------------
+success
+{
+    "code": "SUCCESS",
+    "data": {
+        "bestSelling": [
+            {
+                "id": 161,
+                "name": "numquam",
+                "description": "Omnis quibusdam harum corrupti nobis dicta impedit.",
+                "price": 101.19,
+                "discount": 94,
+                "price_after_discount": 6.071399999999997,
+                "store_img": "http://localhost:8000/uploads/3.png",
+                "product_images": [
+                    {
+                        "img": "http://localhost:8000/uploads/18.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/20.png"
+                    }
+                ],
+                "is_favorited": true
+            },
+            {
+                "id": 429,
+                "name": "voluptatem",
+                "description": "Impedit culpa aut ex debitis similique ut.",
+                "price": 689.82,
+                "discount": null,
+                "price_after_discount": 689.82,
+                "store_img": "http://localhost:8000/uploads/16.png",
+                "product_images": [
+                    {
+                        "img": "http://localhost:8000/uploads/30.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/62.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/95.png"
+                    }
+                ],
+                "is_favorited": false
+            },
+            {
+                "id": 303,
+                "name": "dicta",
+                "description": "Nihil ex et ratione quo quidem debitis nobis beatae.",
+                "price": 416.68,
+                "discount": null,
+                "price_after_discount": 416.68,
+                "store_img": "http://localhost:8000/uploads/11.png",
+                "product_images": [
+                    {
+                        "img": "http://localhost:8000/uploads/7.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/10.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/91.png"
+                    }
+                ],
+                "is_favorited": false
+            }
+        ],
+        "categories": [
+            {
+                "id": 1,
+                "name": "quisquam",
+                "description": "Est dolores fugit blanditiis sed illum esse.",
+                "img": "http://localhost:8000/uploads/1.png"
+            },
+            {
+                "id": 2,
+                "name": "aut",
+                "description": "Dolorem quos dicta laudantium ducimus.",
+                "img": "http://localhost:8000/uploads/2.png"
+            }
+        ],
+        "topStores": [
+            {
+                "id": 3,
+                "name": "sint",
+                "img": "3.png",
+                "category_id": 1,
+                "total_products_ordered": 5
+            },
+            {
+                "id": 16,
+                "name": "ratione",
+                "img": "16.png",
+                "category_id": 2,
+                "total_products_ordered": 4
+            }
+        ]
+    }
+}
