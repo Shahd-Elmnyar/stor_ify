@@ -19,6 +19,8 @@ class CategoryResource extends JsonResource
             'name'=>$this->name ,
             'description' => $this->description ,
             'img' =>url("uploads/".$this->img),
+            'sub_categories' => SubCategoryResource::collection($this->whenLoaded('subCategories')),
+
         ];
     }
 }

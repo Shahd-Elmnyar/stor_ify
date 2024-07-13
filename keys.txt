@@ -256,6 +256,20 @@ if user not authenticated
     }
 
 ------------------------------
+if there is no categories
+
+    {
+        'code' => 'ERROR',
+        'data' => 'NO_CATEGORIES',
+    }
+------------------------------
+if there is no stores
+
+    {
+        'code' => 'ERROR',
+        'data' => 'NO_TOP_STORES',
+    }
+------------------------------
 success
 {
     "code": "SUCCESS",
@@ -357,16 +371,15 @@ success
 
 
 
-categories
+get categories
 -------------------------------------------------------------------------------
 if there is no categories
 ------------------------------------
 
 {
     'code': 'ERROR',
-    'data': {'CATEGORIES_NOT_FOUND'}
+    'data': 'CATEGORIES_NOT_FOUND'
 }
-
 success
 -------------------------------------
 {
@@ -374,35 +387,806 @@ success
     "data": [
         {
             "id": 1,
-            "name": "quisquam",
-            "description": "Est dolores fugit blanditiis sed illum esse.",
-            "img": "http://localhost:8000/uploads/1.png"
+            "name": "pariatur",
+            "description": "Eaque cupiditate error impedit ut veniam.",
+            "img": "http://localhost:8000/uploads/1.png",
+            "sub_categories": [
+                {
+                    "id": 1,
+                    "name": "est"
+                },
+                {
+                    "id": 2,
+                    "name": "ipsam"
+                },
+                {
+                    "id": 3,
+                    "name": "quo"
+                },
+                {
+                    "id": 4,
+                    "name": "eos"
+                },
+                {
+                    "id": 5,
+                    "name": "dolores"
+                }
+            ]
         },
         {
             "id": 2,
-            "name": "aut",
-            "description": "Dolorem quos dicta laudantium ducimus.",
-            "img": "http://localhost:8000/uploads/2.png"
+            "name": "qui",
+            "description": "Ratione aut qui nihil autem a nobis animi.",
+            "img": "http://localhost:8000/uploads/2.png",
+            "sub_categories": [
+                {
+                    "id": 6,
+                    "name": "quo"
+                },
+                {
+                    "id": 7,
+                    "name": "nostrum"
+                },
+                {
+                    "id": 8,
+                    "name": "illum"
+                },
+                {
+                    "id": 9,
+                    "name": "commodi"
+                },
+                {
+                    "id": 10,
+                    "name": "ut"
+                }
+            ]
         },
         {
             "id": 3,
-            "name": "rem",
-            "description": "Dicta aliquam reiciendis voluptatum molestiae iusto aut cupiditate nam.",
-            "img": "http://localhost:8000/uploads/3.png"
+            "name": "in",
+            "description": "Cupiditate dolore quia quis laudantium aliquid.",
+            "img": "http://localhost:8000/uploads/3.png",
+            "sub_categories": [
+                {
+                    "id": 11,
+                    "name": "vel"
+                },
+                {
+                    "id": 12,
+                    "name": "aut"
+                },
+                {
+                    "id": 13,
+                    "name": "eum"
+                },
+                {
+                    "id": 14,
+                    "name": "nostrum"
+                },
+                {
+                    "id": 15,
+                    "name": "sint"
+                }
+            ]
         },
         {
             "id": 4,
-            "name": "amet",
-            "description": "Dolor molestias ea adipisci dolores ratione.",
-            "img": "http://localhost:8000/uploads/4.png"
+            "name": "fugiat",
+            "description": "Voluptate sed vel provident ad aut porro.",
+            "img": "http://localhost:8000/uploads/4.png",
+            "sub_categories": [
+                {
+                    "id": 16,
+                    "name": "voluptates"
+                },
+                {
+                    "id": 17,
+                    "name": "voluptatibus"
+                },
+                {
+                    "id": 18,
+                    "name": "aut"
+                },
+                {
+                    "id": 19,
+                    "name": "vel"
+                },
+                {
+                    "id": 20,
+                    "name": "dolorem"
+                }
+            ]
         },
         {
             "id": 5,
-            "name": "cupiditate",
-            "description": "Perferendis non blanditiis et quisquam ipsum ea voluptatem excepturi.",
-            "img": "http://localhost:8000/uploads/5.png"
+            "name": "ut",
+            "description": "Rerum est culpa hic cum minus ipsa recusandae.",
+            "img": "http://localhost:8000/uploads/5.png",
+            "sub_categories": [
+                {
+                    "id": 21,
+                    "name": "pariatur"
+                },
+                {
+                    "id": 22,
+                    "name": "sit"
+                },
+                {
+                    "id": 23,
+                    "name": "vero"
+                },
+                {
+                    "id": 24,
+                    "name": "velit"
+                },
+                {
+                    "id": 25,
+                    "name": "voluptas"
+                }
+            ]
         }
     ]
 }
 
 
+
+categories details
+---------------------------------------------------------------------
+if user not authenticated
+-----------------------------------
+     {
+        "code": "ERROR",
+        "data": "USER_NOT_AUTH"
+    }
+if there is no sub categories
+------------------------------------
+
+{
+    'code': 'ERROR',
+    'data': 'SUBCATEGORY_NOT_FOUND'
+}
+
+if there is no categories
+------------------------------------
+
+{
+    'code': 'ERROR',
+    'data': 'CATEGORIES_NOT_FOUND'
+}
+
+success
+-------------------------------------
+if {{localhost}}categories/{{category_id}}
+
+{
+    "code": "SUCCESS",
+    "data": {
+        "category": {
+            "id": 1,
+            "name": "pariatur"
+        },
+        "products": [
+            {
+                "id": 1,
+                "name": "incidunt",
+                "description": "Inventore minus saepe voluptates cupiditate.",
+                "price": 383.8,
+                "discount": null,
+                "price_after_discount": 383.8,
+                "store_img": "http://localhost:8000/uploads/1.png",
+                "sub_category": {
+                    "id": 1,
+                    "name": "est"
+                },
+                "product_images": [
+                    {
+                        "img": "http://localhost:8000/uploads/72.png"
+                    }
+                ],
+                "colors": [
+                    {
+                        "id": 14,
+                        "color": "lime"
+                    }
+                ],
+                "sizes": [
+                    {
+                        "id": 1,
+                        "size": "xxs"
+                    },
+                    {
+                        "id": 3,
+                        "size": "s"
+                    },
+                    {
+                        "id": 7,
+                        "size": "xxl"
+                    }
+                ],
+                "is_favorited": false
+            },
+            {
+                "id": 2,
+                "name": "sapiente",
+                "description": "Eligendi voluptas dolorem inventore excepturi laboriosam perspiciatis.",
+                "price": 789.38,
+                "discount": null,
+                "price_after_discount": 789.38,
+                "store_img": "http://localhost:8000/uploads/1.png",
+                "sub_category": {
+                    "id": 1,
+                    "name": "est"
+                },
+                "product_images": [
+                    {
+                        "img": "http://localhost:8000/uploads/35.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/81.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/95.png"
+                    }
+                ],
+                "colors": [
+                    {
+                        "id": 13,
+                        "color": "magenta"
+                    }
+                ],
+                "sizes": [
+                    {
+                        "id": 1,
+                        "size": "xxs"
+                    },
+                    {
+                        "id": 2,
+                        "size": "xs"
+                    },
+                    {
+                        "id": 5,
+                        "size": "l"
+                    }
+                ],
+                "is_favorited": false
+            },
+            {
+                "id": 3,
+                "name": "quo",
+                "description": "Amet excepturi molestiae nihil dolorem occaecati.",
+                "price": 940.92,
+                "discount": null,
+                "price_after_discount": 940.92,
+                "store_img": "http://localhost:8000/uploads/1.png",
+                "sub_category": {
+                    "id": 1,
+                    "name": "est"
+                },
+                "product_images": [
+                    {
+                        "img": "http://localhost:8000/uploads/19.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/39.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/60.png"
+                    }
+                ],
+                "colors": [
+                    {
+                        "id": 17,
+                        "color": "gold"
+                    }
+                ],
+                "sizes": [
+                    {
+                        "id": 2,
+                        "size": "xs"
+                    },
+                    {
+                        "id": 3,
+                        "size": "s"
+                    },
+                    {
+                        "id": 5,
+                        "size": "l"
+                    },
+                    {
+                        "id": 7,
+                        "size": "xxl"
+                    },
+                    {
+                        "id": 8,
+                        "size": "xxxl"
+                    }
+                ],
+                "is_favorited": false
+            },
+            {
+                "id": 4,
+                "name": "quia",
+                "description": "Deserunt magni sint sint repellendus eveniet eum repellendus.",
+                "price": 184.91,
+                "discount": null,
+                "price_after_discount": 184.91,
+                "store_img": "http://localhost:8000/uploads/1.png",
+                "sub_category": {
+                    "id": 1,
+                    "name": "est"
+                },
+                "product_images": [
+                    {
+                        "img": "http://localhost:8000/uploads/4.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/34.png"
+                    }
+                ],
+                "colors": [
+                    {
+                        "id": 2,
+                        "color": "blue"
+                    },
+                    {
+                        "id": 7,
+                        "color": "purple"
+                    },
+                    {
+                        "id": 11,
+                        "color": "gray"
+                    },
+                    {
+                        "id": 18,
+                        "color": "silver"
+                    }
+                ],
+                "sizes": [
+                    {
+                        "id": 4,
+                        "size": "m"
+                    },
+                    {
+                        "id": 5,
+                        "size": "l"
+                    },
+                    {
+                        "id": 8,
+                        "size": "xxxl"
+                    }
+                ],
+                "is_favorited": false
+            },
+            {
+                "id": 5,
+                "name": "sed",
+                "description": "Dolorem et ratione voluptatem repudiandae ut et.",
+                "price": 462.15,
+                "discount": 38,
+                "price_after_discount": 286.53299999999996,
+                "store_img": "http://localhost:8000/uploads/1.png",
+                "sub_category": {
+                    "id": 1,
+                    "name": "est"
+                },
+                "product_images": [
+                    {
+                        "img": "http://localhost:8000/uploads/2.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/22.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/39.png"
+                    }
+                ],
+                "colors": [
+                    {
+                        "id": 9,
+                        "color": "pink"
+                    },
+                    {
+                        "id": 11,
+                        "color": "gray"
+                    },
+                    {
+                        "id": 12,
+                        "color": "cyan"
+                    },
+                    {
+                        "id": 14,
+                        "color": "lime"
+                    }
+                ],
+                "sizes": [
+                    {
+                        "id": 2,
+                        "size": "xs"
+                    },
+                    {
+                        "id": 7,
+                        "size": "xxl"
+                    },
+                    {
+                        "id": 8,
+                        "size": "xxxl"
+                    }
+                ],
+                "is_favorited": false
+            },
+            {
+                "id": 6,
+                "name": "libero",
+                "description": "Cum et est recusandae unde magnam veritatis.",
+                "price": 80.27,
+                "discount": 12,
+                "price_after_discount": 70.63759999999999,
+                "store_img": "http://localhost:8000/uploads/2.png",
+                "sub_category": {
+                    "id": 1,
+                    "name": "est"
+                },
+                "product_images": [
+                    {
+                        "img": "http://localhost:8000/uploads/79.png"
+                    }
+                ],
+                "colors": [
+                    {
+                        "id": 11,
+                        "color": "gray"
+                    }
+                ],
+                "sizes": [
+                    {
+                        "id": 1,
+                        "size": "xxs"
+                    },
+                    {
+                        "id": 2,
+                        "size": "xs"
+                    },
+                    {
+                        "id": 5,
+                        "size": "l"
+                    },
+                    {
+                        "id": 6,
+                        "size": "xl"
+                    },
+                    {
+                        "id": 8,
+                        "size": "xxxl"
+                    }
+                ],
+                "is_favorited": false
+            }
+        ],
+        "pagination": {
+            "total": 250,
+            "per_page": 6,
+            "current_page": 1,
+            "last_page": 42,
+            "next_page_url": "http://localhost:8000/api/categories/1?page=2",
+            "prev_page_url": null
+        }
+    }
+}
+
+
+if {{localhost}}categories/{{category_id}}/{{sub_category_id}}
+-----------------------------
+{
+    "code": "SUCCESS",
+    "data": {
+        "category": {
+            "id": 1,
+            "name": "pariatur"
+        },
+        "products": [
+            {
+                "id": 1,
+                "name": "incidunt",
+                "description": "Inventore minus saepe voluptates cupiditate.",
+                "price": 383.8,
+                "discount": null,
+                "price_after_discount": 383.8,
+                "store_img": "http://localhost:8000/uploads/1.png",
+                "sub_category": {
+                    "id": 1,
+                    "name": "est"
+                },
+                "product_images": [
+                    {
+                        "img": "http://localhost:8000/uploads/72.png"
+                    }
+                ],
+                "colors": [
+                    {
+                        "id": 14,
+                        "color": "lime"
+                    }
+                ],
+                "sizes": [
+                    {
+                        "id": 1,
+                        "size": "xxs"
+                    },
+                    {
+                        "id": 3,
+                        "size": "s"
+                    },
+                    {
+                        "id": 7,
+                        "size": "xxl"
+                    }
+                ],
+                "is_favorited": false
+            },
+            {
+                "id": 2,
+                "name": "sapiente",
+                "description": "Eligendi voluptas dolorem inventore excepturi laboriosam perspiciatis.",
+                "price": 789.38,
+                "discount": null,
+                "price_after_discount": 789.38,
+                "store_img": "http://localhost:8000/uploads/1.png",
+                "sub_category": {
+                    "id": 1,
+                    "name": "est"
+                },
+                "product_images": [
+                    {
+                        "img": "http://localhost:8000/uploads/35.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/81.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/95.png"
+                    }
+                ],
+                "colors": [
+                    {
+                        "id": 13,
+                        "color": "magenta"
+                    }
+                ],
+                "sizes": [
+                    {
+                        "id": 1,
+                        "size": "xxs"
+                    },
+                    {
+                        "id": 2,
+                        "size": "xs"
+                    },
+                    {
+                        "id": 5,
+                        "size": "l"
+                    }
+                ],
+                "is_favorited": false
+            },
+            {
+                "id": 3,
+                "name": "quo",
+                "description": "Amet excepturi molestiae nihil dolorem occaecati.",
+                "price": 940.92,
+                "discount": null,
+                "price_after_discount": 940.92,
+                "store_img": "http://localhost:8000/uploads/1.png",
+                "sub_category": {
+                    "id": 1,
+                    "name": "est"
+                },
+                "product_images": [
+                    {
+                        "img": "http://localhost:8000/uploads/19.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/39.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/60.png"
+                    }
+                ],
+                "colors": [
+                    {
+                        "id": 17,
+                        "color": "gold"
+                    }
+                ],
+                "sizes": [
+                    {
+                        "id": 2,
+                        "size": "xs"
+                    },
+                    {
+                        "id": 3,
+                        "size": "s"
+                    },
+                    {
+                        "id": 5,
+                        "size": "l"
+                    },
+                    {
+                        "id": 7,
+                        "size": "xxl"
+                    },
+                    {
+                        "id": 8,
+                        "size": "xxxl"
+                    }
+                ],
+                "is_favorited": false
+            },
+            {
+                "id": 4,
+                "name": "quia",
+                "description": "Deserunt magni sint sint repellendus eveniet eum repellendus.",
+                "price": 184.91,
+                "discount": null,
+                "price_after_discount": 184.91,
+                "store_img": "http://localhost:8000/uploads/1.png",
+                "sub_category": {
+                    "id": 1,
+                    "name": "est"
+                },
+                "product_images": [
+                    {
+                        "img": "http://localhost:8000/uploads/4.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/34.png"
+                    }
+                ],
+                "colors": [
+                    {
+                        "id": 2,
+                        "color": "blue"
+                    },
+                    {
+                        "id": 7,
+                        "color": "purple"
+                    },
+                    {
+                        "id": 11,
+                        "color": "gray"
+                    },
+                    {
+                        "id": 18,
+                        "color": "silver"
+                    }
+                ],
+                "sizes": [
+                    {
+                        "id": 4,
+                        "size": "m"
+                    },
+                    {
+                        "id": 5,
+                        "size": "l"
+                    },
+                    {
+                        "id": 8,
+                        "size": "xxxl"
+                    }
+                ],
+                "is_favorited": false
+            },
+            {
+                "id": 5,
+                "name": "sed",
+                "description": "Dolorem et ratione voluptatem repudiandae ut et.",
+                "price": 462.15,
+                "discount": 38,
+                "price_after_discount": 286.53299999999996,
+                "store_img": "http://localhost:8000/uploads/1.png",
+                "sub_category": {
+                    "id": 1,
+                    "name": "est"
+                },
+                "product_images": [
+                    {
+                        "img": "http://localhost:8000/uploads/2.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/22.png"
+                    },
+                    {
+                        "img": "http://localhost:8000/uploads/39.png"
+                    }
+                ],
+                "colors": [
+                    {
+                        "id": 9,
+                        "color": "pink"
+                    },
+                    {
+                        "id": 11,
+                        "color": "gray"
+                    },
+                    {
+                        "id": 12,
+                        "color": "cyan"
+                    },
+                    {
+                        "id": 14,
+                        "color": "lime"
+                    }
+                ],
+                "sizes": [
+                    {
+                        "id": 2,
+                        "size": "xs"
+                    },
+                    {
+                        "id": 7,
+                        "size": "xxl"
+                    },
+                    {
+                        "id": 8,
+                        "size": "xxxl"
+                    }
+                ],
+                "is_favorited": false
+            },
+            {
+                "id": 6,
+                "name": "libero",
+                "description": "Cum et est recusandae unde magnam veritatis.",
+                "price": 80.27,
+                "discount": 12,
+                "price_after_discount": 70.63759999999999,
+                "store_img": "http://localhost:8000/uploads/2.png",
+                "sub_category": {
+                    "id": 1,
+                    "name": "est"
+                },
+                "product_images": [
+                    {
+                        "img": "http://localhost:8000/uploads/79.png"
+                    }
+                ],
+                "colors": [
+                    {
+                        "id": 11,
+                        "color": "gray"
+                    }
+                ],
+                "sizes": [
+                    {
+                        "id": 1,
+                        "size": "xxs"
+                    },
+                    {
+                        "id": 2,
+                        "size": "xs"
+                    },
+                    {
+                        "id": 5,
+                        "size": "l"
+                    },
+                    {
+                        "id": 6,
+                        "size": "xl"
+                    },
+                    {
+                        "id": 8,
+                        "size": "xxxl"
+                    }
+                ],
+                "is_favorited": false
+            }
+        ],
+        "pagination": {
+            "total": 50,
+            "per_page": 6,
+            "current_page": 1,
+            "last_page": 9,
+            "next_page_url": "http://localhost:8000/api/categories/1/1?page=2",
+            "prev_page_url": null
+        }
+    }
+}

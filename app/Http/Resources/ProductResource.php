@@ -24,10 +24,10 @@ class ProductResource extends JsonResource
             // 'store' => new StoreResource($this->whenLoaded('store')),
             "store_img"=>url("uploads/".$this->store->img),
             // 'images'=> asset('uploads/'.$this->images->img),
-            // 'sub_category' => new SubCategoryResource($this->whenLoaded('subCategory')),
+            'sub_category' => new SubCategoryResource($this->whenLoaded('subCategory')),
             'product_images' => ImageResource::collection($this->whenLoaded('images')),
-            // 'colors' => ColorResource::collection($this->whenLoaded('colors')),
-            // 'sizes' => SizeResource::collection($this->whenLoaded('sizes')),
+            'colors' => ColorResource::collection($this->whenLoaded('colors')),
+            'sizes' => SizeResource::collection($this->whenLoaded('sizes')),
             'is_favorited' => $this->isFavoritedByUser($request->user()),
         ];
     }

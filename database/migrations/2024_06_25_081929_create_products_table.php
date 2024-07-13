@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('discount')->nullable();
             $table->foreignId('store_id')->constrained();
             $table->foreignId('sub_category_id')->constrained();
+            $table->foreignId('category_id')->constrained();
             $table->timestamps();
         });
     }

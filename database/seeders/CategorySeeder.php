@@ -55,7 +55,7 @@ class CategorySeeder extends Seeder
         });
         $images = Image::factory(100)->create();
 
-        $categories->each(function ($category) use ($sizes, $colors , $images) {
+        $categories->each(function ($category) use ($sizes, $colors, $images) {
             $stores = Store::factory(10)->create(['category_id' => $category->id]);
 
             $stores->each(function ($store) use ($category) {
@@ -64,14 +64,14 @@ class CategorySeeder extends Seeder
 
             $subCategories = SubCategory::factory(5)->create(['category_id' => $category->id]);
 
-            $subCategories->each(function ($subCategory) use ($stores, $sizes, $colors , $images) {
-                $stores->each(function ($store) use ($subCategory, $sizes, $colors , $images) {
+            $subCategories->each(function ($subCategory) use ($stores, $sizes, $colors, $images, $category) {
+                $stores->each(function ($store) use ($subCategory, $sizes, $colors, $images, $category) {
                     Product::factory(5)
                         ->for($store, 'store')
                         ->for($subCategory, 'subCategory')
-
+                        ->for($category, 'category')
                         ->create()
-                        ->each(function ($product) use ($sizes, $colors ,$images) {
+                        ->each(function ($product) use ($sizes, $colors, $images) {
                             // Assign a random subset of sizes to each product
                             $product->sizes()->attach($sizes->random(rand(1, 5))->pluck('id')->toArray());
                             // Assign a random subset of colors to each product

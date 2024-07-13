@@ -33,6 +33,7 @@ Route::post('/reset-password', [UpdatePasswordController::class, 'updatePassword
 
 
 
-Route::get('/home',[HomeController::class ,'index'])->middleware('auth:sanctum');
+Route::apiResource('/home',HomeController::class )->middleware('auth:sanctum');
 
-Route::apiResource('categories', CategoryController::class);
+Route::apiResource('categories', CategoryController::class)->middleware('auth:sanctum');
+Route::get('categories/{id}/{subCategoryId?}', [CategoryController::class, 'show'])->middleware('auth:sanctum');
