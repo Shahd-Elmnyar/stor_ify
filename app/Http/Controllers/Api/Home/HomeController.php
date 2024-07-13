@@ -16,7 +16,7 @@ class HomeController extends Controller
 
     public function index(Request $request)
     {
-        $user = $request->user(); // Get the authenticated user by token
+        $user = $request->user();
 
         if (!$user) {
             return response()->json([

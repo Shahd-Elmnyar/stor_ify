@@ -48,7 +48,7 @@ class ForgetPasswordController extends Controller
 
             return response()->json([
                 'code' => 'ERROR',
-                'data' => 'GENERIC_ERROR',
+                'data' => (object)['GENERIC_ERROR'],
             ], 500);
         }
     }

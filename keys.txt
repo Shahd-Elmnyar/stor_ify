@@ -354,3 +354,55 @@ success
         ]
     }
 }
+
+
+
+categories
+-------------------------------------------------------------------------------
+if there is no categories
+------------------------------------
+
+{
+    'code': 'ERROR',
+    'data': {'CATEGORIES_NOT_FOUND'}
+}
+
+success
+-------------------------------------
+{
+    "code": "SUCCESS",
+    "data": [
+        {
+            "id": 1,
+            "name": "quisquam",
+            "description": "Est dolores fugit blanditiis sed illum esse.",
+            "img": "http://localhost:8000/uploads/1.png"
+        },
+        {
+            "id": 2,
+            "name": "aut",
+            "description": "Dolorem quos dicta laudantium ducimus.",
+            "img": "http://localhost:8000/uploads/2.png"
+        },
+        {
+            "id": 3,
+            "name": "rem",
+            "description": "Dicta aliquam reiciendis voluptatum molestiae iusto aut cupiditate nam.",
+            "img": "http://localhost:8000/uploads/3.png"
+        },
+        {
+            "id": 4,
+            "name": "amet",
+            "description": "Dolor molestias ea adipisci dolores ratione.",
+            "img": "http://localhost:8000/uploads/4.png"
+        },
+        {
+            "id": 5,
+            "name": "cupiditate",
+            "description": "Perferendis non blanditiis et quisquam ipsum ea voluptatem excepturi.",
+            "img": "http://localhost:8000/uploads/5.png"
+        }
+    ]
+}
+
+

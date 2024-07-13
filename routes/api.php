@@ -1,13 +1,14 @@
 <?php
 
-use App\Http\Controllers\Api\Auth\ForgetPasswordController;
-use App\Http\Controllers\Api\Auth\ResetPasswordController;
-use App\Http\Controllers\Api\Auth\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Auth\ValidateOtpController;
-use App\Http\Controllers\Api\Auth\UpdatePasswordController;
+use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Home\HomeController;
+use App\Http\Controllers\Api\Auth\ValidateOtpController;
+use App\Http\Controllers\Api\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\Auth\ForgetPasswordController;
+use App\Http\Controllers\Api\Auth\UpdatePasswordController;
+use App\Http\Controllers\Api\Categories\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,8 +23,6 @@ use App\Http\Controllers\Api\Home\HomeController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-
-// Example route definition with middleware
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 // reset password OTP verification
@@ -35,3 +34,5 @@ Route::post('/reset-password', [UpdatePasswordController::class, 'updatePassword
 
 
 Route::get('/home',[HomeController::class ,'index'])->middleware('auth:sanctum');
+
+Route::apiResource('categories', CategoryController::class);
