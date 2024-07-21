@@ -62,10 +62,7 @@ class UpdatePasswordController extends Controller
         } catch (\Exception $e) {
             Log::error('Error during password update process: ' . $e->getMessage());
 
-            return response()->json([
-                'code' => 'ERROR',
-                'data' => (object)['GENERIC_ERROR'],
-            ], 500);
+            return $this->genericErrorResponse();
         }
     }
 }

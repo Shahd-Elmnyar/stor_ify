@@ -36,7 +36,7 @@
                             <img alt="" src="https://store-ify-resources.s3.ap-northeast-2.amazonaws.com/vrstyler/1663574980688_114990/store-ify-logo" height="30px" />
                         </td>
                         <td style="text-align: right;">
-                            <span style="font-size: 16px; line-height: 30px; color: #ffffff;">12 Nov, 2021</span>
+                            <!-- <span style="font-size: 16px; line-height: 30px; color: #ffffff;">12 Nov, 2021</span> -->
                         </td>
                     </tr>
                 </tbody>
@@ -129,7 +129,7 @@
             <div style="margin: 0; margin-top: 16px;">
             </div>
             <p style="margin: 0; margin-top: 16px; color: #434343;">
-                Copyright © 2022 Company. All rights reserved.
+                Copyright © 2024 store-ify Company. All rights reserved.
             </p>
         </footer>
     </div>

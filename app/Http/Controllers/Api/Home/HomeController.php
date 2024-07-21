@@ -15,37 +15,28 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
-        $user = $request->user();
-
+        $user = $this->getUser($request);
         if (!$user) {
-            return response()->json([
-                'code' => 'ERROR',
-                'data' => (object)['USER_NOT_AUTH'],
-            ], 401);
+            return $this->unauthorizedResponse();
         }
 
         $topProducts = $this->getTopProducts($user->id);
 
-        $categories = $this->getCategories();
+        $categories = $this->getCategory();
         if ($categories->isEmpty()) {
-            return response()->json([
-                'code' => 'ERROR',
-                'data' => (object)['NO_CATEGORIES'],
-            ], 404);
+            return $this->notFoundResponse('NO_CATEGORIES');
         }
 
         $topStores = $this->getTopStores();
         if ($topStores->isEmpty()) {
-            return response()->json([
-                'code' => 'ERROR',
-                'data' => (object)['NO_TOP_STORES'],
-            ], 404);
+            return $this->notFoundResponse('NO_TOP_STORES');
         }
 
         return response()->json([
             'code' => 'SUCCESS',
             'data' => [
                 'bestSelling' => ProductResource::collection($topProducts),
+                'pagination' => $this->getPaginationData($topProducts),
                 'categories' => CategoryResource::collection($categories),
                 'topStores' => StoreResource::collection($topStores),
             ]
@@ -61,25 +52,19 @@ class HomeController extends Controller
             ->join('order_items', 'products.id', '=', 'order_items.product_id')
             ->groupBy('products.id', 'products.name', 'products.description', 'products.price', 'products.discount', 'products.store_id', 'products.sub_category_id', 'products.created_at', 'products.updated_at', 'products.category_id')
             ->orderByDesc('order_count')
-            ->limit(3)
-            ->get();
+            ->paginate(3);
 
         if ($topProducts->isEmpty()) {
             $topProducts = Product::with(['images', 'favorites' => function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             }])
                 ->inRandomOrder()
-                ->limit(3)
-                ->get();
+                ->paginate(3);
         }
-
         return $topProducts;
     }
 
-    private function getCategories()
-    {
-        return Category::paginate(2);
-    }
+
 
     private function getTopStores()
     {
@@ -101,4 +86,9 @@ class HomeController extends Controller
 
         return $topStores;
     }
+    public function getCategory()
+    {
+        return Category::limit(2)->get();
+    }
+
 }

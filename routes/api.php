@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
 use App\Http\Controllers\Api\Categories\CategoryController;
+use App\Http\Controllers\Api\Stores\StoreController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,17 +24,16 @@ use App\Http\Controllers\Api\Categories\CategoryController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 // reset password OTP verification
 Route::post('/forget-password', [ForgetPasswordController::class, 'forgetPassword']);
 Route::post('/validate-otp', [ValidateOtpController::class, 'validateOtp']);
 Route::post('/reset-password', [UpdatePasswordController::class, 'updatePassword']);
 
-
-
-
-Route::apiResource('/home',HomeController::class )->middleware('auth:sanctum');
-
-Route::apiResource('categories', CategoryController::class)->middleware('auth:sanctum');
-Route::get('categories/{id}/{subCategoryId?}', [CategoryController::class, 'show'])->middleware('auth:sanctum');
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::apiResource('/home', HomeController::class);
+    Route::apiResource('categories', CategoryController::class);
+    Route::get('categories/{categoryId}/{subCategoryId?}', [CategoryController::class, 'show']);
+    Route::get('stores/{CategoryId?}', [StoreController::class, 'getStores']);
+});

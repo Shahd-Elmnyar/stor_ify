@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\QueryException;
@@ -47,22 +48,6 @@ class AuthController extends Controller
                 'code' => 'ERROR',
                 'data' => $validator->errors()->first()], 422);
         }
-
-        // Check if the username or email already exists
-        // if (User::where('username', $request->username)->exists()) {
-        //     return response()->json([
-        //         'code' => 'ERROR',
-        //         'data'=>'USERNAME_TAKEN',
-        //         ], 409);
-        // }
-
-        // if (User::where('email', $request->email)->exists()) {
-        //     return response()->json([
-        //         'code' =>'ERROR',
-        //         'data'=> 'EMAIL_TAKEN',
-        //         ], 409);
-        // }
-
         // Retrieve the user role
         $userRole = Role::where('name', 'user')->first();
         if (!$userRole) {

@@ -32,10 +32,7 @@ class ForgetPasswordController extends Controller
             }
             $user = User::where('email', $request->email)->first();
             if (!$user) {
-                return response()->json([
-                    'code' => 'ERROR',
-                    'data' => 'USER_NOT_FOUND',
-                ], 404);
+                return $this->notFoundResponse('USER_NOT_FOUND');
             }
 
             $user->notify(new ResetPasswordVerificationNotification());
@@ -46,37 +43,7 @@ class ForgetPasswordController extends Controller
         } catch (\Exception $e) {
             Log::error('Error during forget password process: ' . $e->getMessage());
 
-            return response()->json([
-                'code' => 'ERROR',
-                'data' => (object)['GENERIC_ERROR'],
-            ], 500);
+            return $this->genericErrorResponse();
         }
     }
 }
-
-// try {
-//     $input = $request->only('email');
-//     $user = User::where('email', $input['email'])->first();
-
-//     if (!$user) {
-//         return response()->json([
-//             'code' => 'ERROR',
-//             'msg' => 'USER_NOT_FOUND',
-//         ], 404);
-//     }
-
-//     $user->notify(new ResetPasswordVerificationNotification());
-
-//     return response()->json([
-//         'code' => 'SUCCESS',
-//         'data' => [],
-//     ], 200);
-
-// } catch (\Exception $e) {
-//     Log::error('Error during forget password process: ' . $e->getMessage());
-
-//     return response()->json([
-//         'code' => 'ERROR',
-//         'msg' => 'GENERIC_ERROR',
-//     ], 500);
-// }

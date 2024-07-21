@@ -42,7 +42,7 @@ class ValidateOtpController extends Controller
 
             $otp2 = $this->otp->validate($request->email, $request->otp);
             if (!$otp2->status) {
-                $msg = $otp2->message == "OTP is not valid" || $otp2->message =="OTP does not exist" ? 'INVALID_OTP' : $otp2->message;
+                $msg = $otp2->message == "OTP is not valid" || $otp2->message == "OTP does not exist" ? 'INVALID_OTP' : $otp2->message;
                 return response()->json([
                     'code' => 'ERROR',
                     'data' => $msg
@@ -59,10 +59,7 @@ class ValidateOtpController extends Controller
         } catch (\Exception $e) {
             Log::error('Error during OTP validation process: ' . $e->getMessage());
 
-            return response()->json([
-                'code' => 'ERROR',
-                'data' => (object)['GENERIC_ERROR'],
-            ], 500);
+            return $this->genericErrorResponse();
         }
     }
 }
