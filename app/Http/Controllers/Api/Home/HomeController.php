@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Api\Home;
 
+use App\Models\Store;
 use App\Models\Product;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\ProductResource;
 use App\Http\Resources\StoreResource;
-use App\Models\Category;
+use App\Http\Resources\ProductResource;
+use App\Http\Resources\CategoryResource;
 
 class HomeController extends Controller
 {
@@ -23,14 +24,10 @@ class HomeController extends Controller
         $topProducts = $this->getTopProducts($user->id);
 
         $categories = $this->getCategory();
-        if ($categories->isEmpty()) {
-            return $this->notFoundResponse('NO_CATEGORIES');
-        }
+
 
         $topStores = $this->getTopStores();
-        if ($topStores->isEmpty()) {
-            return $this->notFoundResponse('NO_TOP_STORES');
-        }
+
 
         return response()->json([
             'code' => 'SUCCESS',
@@ -45,7 +42,7 @@ class HomeController extends Controller
 
     private function getTopProducts($userId)
     {
-        $topProducts = Product::with(['images', 'favorites' => function ($query) use ($userId) {
+        $topProducts = Product::with(['store', 'images', 'favorites' => function ($query) use ($userId) {
             $query->where('user_id', $userId);
         }])
             ->select('products.*', DB::raw('COUNT(order_items.id) as order_count'))
@@ -55,7 +52,7 @@ class HomeController extends Controller
             ->paginate(3);
 
         if ($topProducts->isEmpty()) {
-            $topProducts = Product::with(['images', 'favorites' => function ($query) use ($userId) {
+            $topProducts = Product::with(['store', 'images', 'favorites' => function ($query) use ($userId) {
                 $query->where('user_id', $userId);
             }])
                 ->inRandomOrder()
@@ -64,31 +61,32 @@ class HomeController extends Controller
         return $topProducts;
     }
 
-
-
     private function getTopStores()
     {
-        $topStores = DB::table('stores')
-            ->join('products', 'stores.id', '=', 'products.store_id')
-            ->join('order_items', 'products.id', '=', 'order_items.product_id')
-            ->select('stores.*', DB::raw('COUNT(order_items.id) as total_products_ordered'))
-            ->groupBy('stores.id', 'stores.name', 'stores.img', 'stores.category_id', 'stores.created_at', 'stores.updated_at')
-            ->orderByDesc('total_products_ordered')
-            ->limit(2)
+        $topStores = Store::with('categories') // Eager load categories
+        ->join('category_store', 'stores.id', '=', 'category_store.store_id')
+        ->join('products', 'stores.id', '=', 'products.store_id')
+        ->join('order_items', 'products.id', '=', 'order_items.product_id')
+        ->select('stores.*', DB::raw('COUNT(order_items.id) as total_products_ordered'))
+        ->groupBy('stores.id', 'stores.name', 'stores.img', 'stores.created_at', 'stores.updated_at')
+        ->orderByDesc('total_products_ordered')
+        ->limit(2)
             ->get();
 
         if ($topStores->isEmpty()) {
-            $topStores = DB::table('stores')
-                ->inRandomOrder()
-                ->limit(2)
-                ->get();
+            $topStores = Store::inRandomOrder()->limit(2)->get();
         }
 
         return $topStores;
     }
+
     public function getCategory()
     {
-        return Category::limit(2)->get();
+        $categories= Category::limit(2)->get();
+        if ($categories->isEmpty()) {
+            return $this->notFoundResponse('NO_CATEGORIES');
+        }
+        return $categories;
     }
 
 }

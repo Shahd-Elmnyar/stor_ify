@@ -42,7 +42,6 @@ class ForgetPasswordController extends Controller
             ], 200);
         } catch (\Exception $e) {
             Log::error('Error during forget password process: ' . $e->getMessage());
-
             return $this->genericErrorResponse();
         }
     }

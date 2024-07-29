@@ -61,7 +61,7 @@ class Controller extends BaseController
 
     public function getCategoryProducts(Category $category, $subCategoryId)
     {
-        $query = $category->products()->with('images', 'subCategory', 'colors', 'sizes');
+        $query = $category->products()->with('images', 'subCategory', 'colors', 'sizes','store');
 
         if ($subCategoryId) {
             $query->where('sub_category_id', $subCategoryId);

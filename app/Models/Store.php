@@ -13,9 +13,10 @@ class Store extends Model
         'img',
         'category_id',
     ];
-    public function category()
+    public function categories()
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsToMany(Category::class , 'category_store', 'store_id', 'category_id')
+        ->withTimestamps();
     }
     public function products()
     {

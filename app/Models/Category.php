@@ -15,7 +15,8 @@ class Category extends Model
     ];
     public function stores()
     {
-        return $this->hasMany(Store::class);
+        return $this->belongsToMany(Store::class, 'category_store', 'category_id', 'store_id')
+        ->withTimestamps();
     }
     public function subCategories()
     {

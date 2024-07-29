@@ -36,4 +36,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('categories', CategoryController::class);
     Route::get('categories/{categoryId}/{subCategoryId?}', [CategoryController::class, 'show']);
     Route::get('stores/{CategoryId?}', [StoreController::class, 'getStores']);
+    Route::get('stores/offer/{storeId}', [StoreController::class, 'getProductsWithDiscount']);
+    Route::get('stores/branches/{storeId}', [StoreController::class, 'getBranches']);
+    Route::get('stores/category/{storeId}', [StoreController::class, 'getStoreCategories']);
 });

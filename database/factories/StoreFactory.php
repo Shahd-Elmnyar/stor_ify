@@ -21,7 +21,7 @@ class StoreFactory extends Factory
         $i ++;
         return [
             'name' => fake()->word,
-            'category_id' => Category::factory(),
+            // 'category_id' => Category::factory(),
             'img' => $i.".png",
         ];
     }
