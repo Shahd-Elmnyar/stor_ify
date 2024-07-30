@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryResource;
+use App\Http\Resources\SubCategoryResource;
 use App\Http\Resources\CategoryDetailResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -49,9 +50,19 @@ class CategoryController extends Controller
             if ($subCategoryId && !$this->subcategoryExists($category, $subCategoryId)) {
                 return $this->notFoundResponse('SUBCATEGORY_NOT_FOUND');
             }
+            if($subCategoryId){
+                $category =Category::findOrFail($id);
+                return $this->successResponse([
+                    'category' => new CategoryDetailResource($category),
+                    // 'sub_categories' => SubCategoryResource::collection($category->subCategories),
+                    'products' => ProductResource::collection($products),
+                    'pagination' => $this->getPaginationData($products)
+                ]);
+            }
 
             return $this->successResponse([
                 'category' => new CategoryDetailResource($category),
+                // 'sub_categories' => SubCategoryResource::collection($category->subCategories),
                 'products' => ProductResource::collection($products),
                 'pagination' => $this->getPaginationData($products)
             ]);
