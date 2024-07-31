@@ -35,12 +35,9 @@ class StoreController extends Controller
             $stores = $query->paginate(6); // Paginate the results with 6 stores per page
 
             // Return the response using the StoreResource
-            return response()->json([
-                'code' => 'SUCCESS',
-                'data' => [
+            return $this->successResponse([
                     'stores' => StoreResource::collection($stores),
                     'pagination' => $this->getPaginationData($stores),
-                ],
             ]);
         } catch (\Exception $e) {
             // Handle the exception and return an error response
@@ -61,13 +58,9 @@ class StoreController extends Controller
                 ->with('store')
                 ->paginate(6);
 
-            return response()->json([
-                'code' => 'SUCCESS',
-                'data' => [
+            return $this->successResponse([
                     'products' => ProductResource::collection($products),
                     'pagination' => $this->getPaginationData($products),
-                ],
-
             ]);
         } catch (Exception $e) {
             return $this->genericErrorResponse();
@@ -84,12 +77,10 @@ class StoreController extends Controller
             $store = Store::findOrFail($storeId);
             $branches = $store->branches;
 
-            return response()->json([
-                'code' => 'SUCCESS',
-                'data' => [
+            return $this->successResponse([
                     'branches' => BranchResource::collection($branches),
                 ]
-            ]);
+            );
         } catch (ModelNotFoundException $e) {
             return $this->notFoundResponse('BRANCH_NOT_FOUND');
         } catch (\Exception $e) {
@@ -108,12 +99,8 @@ class StoreController extends Controller
             $store = Store::findOrFail($storeId);
             $categories = $store->categories;
 
-            return response()->json([
-                'code' => 'SUCCESS',
-                'data' => [
-                    'categories' => CategoryDetailResource::collection($categories),
-                ]
-            ]);
+            return $this->successResponse([
+                'categories' => CategoryDetailResource::collection($categories)]);
         } catch (ModelNotFoundException $e) {
             return $this->notFoundResponse('CATEGORY_NOT_FOUND');
         } catch (\Exception $e) {
