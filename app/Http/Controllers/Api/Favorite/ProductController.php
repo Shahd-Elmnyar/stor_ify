@@ -1,18 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Favorite;
+namespace App\Http\Controllers\Api\Favorite;
 
 use Exception;
-use App\Models\Store;
+use App\Models\Product;
 use App\Models\Favorite;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\StoreResource;
+use App\Http\Resources\ProductResource;
 
-
-class StoreController extends Controller
+class ProductController extends Controller
 {
     public function index(Request $request)
     {
@@ -22,12 +21,12 @@ class StoreController extends Controller
                 return $this->unauthorizedResponse();
             }
 
-            $favoriteStores = $this->getUserFavoriteStores($user->id);
-            if ($favoriteStores->isEmpty()) {
-                return $this->notFoundResponse('NO_FAVORITE_STORES');
+            $favoriteProducts = $this->getUserFavoriteProducts($user->id);
+            if ($favoriteProducts->isEmpty()) {
+                return $this->notFoundResponse('NO_FAVORITE_PRODUCTS');
             }
 
-            return $this->successResponse(StoreResource::collection($favoriteStores));
+            return $this->successResponse(ProductResource::collection($favoriteProducts));
         } catch (Exception $e) {
             Log::error('Error during forget password process: ' . $e->getMessage());
 
@@ -35,12 +34,12 @@ class StoreController extends Controller
         }
     }
 
-    private function getUserFavoriteStores($userId)
+    private function getUserFavoriteProducts($userId)
     {
-        return Favorite::with('store')
+        return Favorite::with('product')
             ->where('user_id', $userId)
             ->get()
-            ->pluck('store');
+            ->pluck('product');
     }
 
     public function store(Request $request)
@@ -51,29 +50,29 @@ class StoreController extends Controller
                 return $this->unauthorizedResponse();
             }
 
-            // Check if the store exists
-            $storeExists = Store::where('id', $request->store_id)->exists();
-            if (!$storeExists) {
-                return $this->notFoundResponse('STORE_NOT_FOUND');
+            // Check if the product exists
+            $productExists = Product::where('id', $request->product_id)->exists();
+            if (!$productExists) {
+                return $this->notFoundResponse('PRODUCT_NOT_FOUND');
             }
 
-            // Check if the store is already in favorites
+            // Check if the product is already in favorites
             $alreadyFavorited = Favorite::where('user_id', $user->id)
-                ->where('store_id', $request->store_id)
+                ->where('product_id', $request->product_id)
                 ->exists();
             if ($alreadyFavorited) {
                 return response()->json([
                     'code' => 'ERROR',
-                    'data' => 'STORE_ALREADY_FAVORITED',
+                    'data' => 'PRODUCT_ALREADY_FAVORITED',
                 ], 422);
             }
 
             $favorite = Favorite::firstOrCreate([
                 'user_id' => $user->id,
-                'store_id' => $request->store_id,
+                'product_id' => $request->product_id,
             ]);
 
-            return $this->successResponse([new StoreResource($favorite->store)]);
+            return $this->successResponse([new ProductResource($favorite->product)]);
         } catch (Exception $e) {
             return $this->genericErrorResponse();
         }
@@ -88,14 +87,14 @@ class StoreController extends Controller
             }
 
             $favorite = Favorite::where('user_id', $user->id)
-                ->where('Store_id', $id)
+                ->where('product_id', $id)
                 ->first();
 
             if ($favorite) {
                 $favorite->delete();
-                return $this->successResponse('STORE_REMOVED');
+                return $this->successResponse('PRODUCT_REMOVED');
             } else {
-                return $this->notFoundResponse('STORE_NOT_FAVORITED');
+                return $this->notFoundResponse('PRODUCT_NOT_FAVORITED');
             }
         } catch (Exception $e) {
             return $this->genericErrorResponse();

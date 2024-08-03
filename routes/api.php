@@ -5,13 +5,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Home\HomeController;
 use App\Http\Controllers\Api\Stores\StoreController;
-use App\Http\Controllers\Favorite\ProductController;
+use App\Http\Controllers\Api\Favorite\ProductController;
 use App\Http\Controllers\Api\Auth\ValidateOtpController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
 use App\Http\Controllers\Api\Categories\CategoryController;
-use App\Http\Controllers\Favorite\StoreController as FavoriteStoreController;
+use App\Http\Controllers\Api\Favorite\StoreController as FavoriteStoreController;
 
 /*
 |--------------------------------------------------------------------------
