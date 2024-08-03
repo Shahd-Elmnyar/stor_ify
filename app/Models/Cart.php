@@ -10,6 +10,7 @@ class Cart extends Model
     use HasFactory;
     protected $fillable = [
         'user_id',
+        'total_price',
     ];
     public function cartItems()
     {

@@ -3,10 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\Auth\AuthController;
+use App\Http\Controllers\Api\Cart\CartController;
 use App\Http\Controllers\Api\Home\HomeController;
 use App\Http\Controllers\Api\Stores\StoreController;
-use App\Http\Controllers\Api\Favorite\ProductController;
 use App\Http\Controllers\Api\Auth\ValidateOtpController;
+use App\Http\Controllers\Api\Favorite\ProductController;
 use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
 use App\Http\Controllers\Api\Categories\CategoryController;
@@ -44,4 +45,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('favorites', ProductController::class)->only(['index', 'store', 'destroy']);
     Route::apiResource('favoritesStore', FavoriteStoreController::class)->only(['index', 'store', 'destroy']);
     Route::post('search', [ProductsProductController::class, 'search']);
+    Route::post('addProduct/{product_id}', [CartController::class, 'addProductToCart']);
+    Route::get('/cart', [CartController::class, 'showCart']);
+    Route::delete('cart/{productId}', [CartController::class, 'deleteProductFromCart']);
+
+
 });

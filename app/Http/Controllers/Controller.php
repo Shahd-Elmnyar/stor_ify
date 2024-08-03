@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -41,13 +43,20 @@ class Controller extends BaseController
             'data' => (object)['GENERIC_ERROR'],
         ], 500);
     }
+    public function validationErrorResponse($message)
+    {
+        return response()->json([
+            'code' => 'ERROR',
+            'data' => $message,
+        ], 403);
+    }
 
     public function successResponse($data=" ")
     {
         return response()->json([
             'code' => 'SUCCESS',
             'data' => $data,
-        ]);
+        ], 200);
     }
 
     public function getCategories($perPage)
@@ -89,4 +98,61 @@ class Controller extends BaseController
         }
         return [];
     }
+    public function updateTotalCartPrice($cart, $cartItem = null, $isDeleting = false)
+    {
+        // Ensure that $cart->total_price is numeric
+        if (!is_numeric($cart->total_price)) {
+            Log::error('Non-numeric value encountered in updateTotalCartPrice', [
+                'cart_total_price' => $cart->total_price,
+            ]);
+            throw new \Exception('Non-numeric value encountered in updateTotalCartPrice');
+        }
+
+        if ($cartItem) {
+            // Ensure that $cartItem->total is numeric
+            if (!is_numeric($cartItem->total)) {
+                Log::error('Non-numeric value encountered in updateTotalCartPrice', [
+                    'cart_item_total' => $cartItem->total
+                ]);
+                throw new \Exception('Non-numeric value encountered in updateTotalCartPrice');
+            }
+
+            if ($isDeleting) {
+                $cart->total_price -= $cartItem->total;
+            } else {
+                $cart->total_price += $cartItem->total;
+            }
+        }
+
+        // Check if the cart is empty and set total_price to 0 if it is
+        if ($cart->cartItems->isEmpty()) {
+            $cart->total_price = 0.00;
+        }
+
+        $cart->save();
+    }
+    public function getProductById($productId)
+    {
+        return Product::findOrFail($productId);
+    }
+    public function productSizeCheck($product, $data)
+    {
+        $sizeExists = $product->sizes()->where('sizes.id', $data['size_id'])->exists();
+        if (!$sizeExists) {
+            return $this->validationErrorResponse(
+                'SIZE_ID_NOT_FOUND_FOR_PRODUCT'
+            );
+        }
+    }
+
+    public function productColorCheck($product, $data)
+    {
+        $colorExists = $product->colors()->where('colors.id', $data['color_id'])->exists();
+        if (!$colorExists) {
+            return $this->validationErrorResponse(
+                'COLOR_ID_NOT_FOUND_FOR_PRODUCT'
+            );
+        }
+    }
+
 }

@@ -3,13 +3,17 @@
 namespace App\Http\Controllers\Api\Favorite;
 
 use Exception;
+use App\Models\Cart;
 use App\Models\Product;
+use App\Models\CartItem;
 use App\Models\Favorite;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProductController extends Controller
 {
@@ -102,4 +106,5 @@ class ProductController extends Controller
             return $this->genericErrorResponse();
         }
     }
+
 }
