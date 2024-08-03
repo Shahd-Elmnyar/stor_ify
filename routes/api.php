@@ -7,11 +7,11 @@ use App\Http\Controllers\Api\Home\HomeController;
 use App\Http\Controllers\Api\Stores\StoreController;
 use App\Http\Controllers\Api\Favorite\ProductController;
 use App\Http\Controllers\Api\Auth\ValidateOtpController;
-use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
 use App\Http\Controllers\Api\Categories\CategoryController;
 use App\Http\Controllers\Api\Favorite\StoreController as FavoriteStoreController;
+use App\Http\Controllers\Api\Products\ProductController as ProductsProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,4 +43,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('stores/category/{storeId}', [StoreController::class, 'getStoreCategories']);
     Route::apiResource('favorites', ProductController::class)->only(['index', 'store', 'destroy']);
     Route::apiResource('favoritesStore', FavoriteStoreController::class)->only(['index', 'store', 'destroy']);
+    Route::post('search', [ProductsProductController::class, 'search']);
 });
