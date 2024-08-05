@@ -8,21 +8,18 @@ use App\Models\Favorite;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AppController;
 use App\Http\Resources\StoreResource;
 
 
-class StoreController extends Controller
+class StoreController extends AppController
 {
     public function index(Request $request)
     {
         try {
-            $user = $this->getUser($request);
-            if (!$user) {
-                return $this->unauthorizedResponse();
-            }
 
-            $favoriteStores = $this->getUserFavoriteStores($user->id);
+
+            $favoriteStores = $this->getUserFavoriteStores();
             if ($favoriteStores->isEmpty()) {
                 return $this->notFoundResponse('NO_FAVORITE_STORES');
             }
@@ -35,10 +32,10 @@ class StoreController extends Controller
         }
     }
 
-    private function getUserFavoriteStores($userId)
+    private function getUserFavoriteStores()
     {
         return Favorite::with('store')
-            ->where('user_id', $userId)
+            ->where('user_id', $this->user->id)
             ->get()
             ->pluck('store');
     }
@@ -46,10 +43,7 @@ class StoreController extends Controller
     public function store(Request $request)
     {
         try {
-            $user = $this->getUser($request);
-            if (!$user) {
-                return $this->unauthorizedResponse();
-            }
+
 
             // Check if the store exists
             $storeExists = Store::where('id', $request->store_id)->exists();
@@ -58,7 +52,7 @@ class StoreController extends Controller
             }
 
             // Check if the store is already in favorites
-            $alreadyFavorited = Favorite::where('user_id', $user->id)
+            $alreadyFavorited = Favorite::where('user_id', $this->user->id)
                 ->where('store_id', $request->store_id)
                 ->exists();
             if ($alreadyFavorited) {
@@ -69,7 +63,7 @@ class StoreController extends Controller
             }
 
             $favorite = Favorite::firstOrCreate([
-                'user_id' => $user->id,
+                'user_id' => $this->user->id,
                 'store_id' => $request->store_id,
             ]);
 
@@ -82,12 +76,9 @@ class StoreController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            $user = $this->getUser($request);
-            if (!$user) {
-                return $this->unauthorizedResponse();
-            }
 
-            $favorite = Favorite::where('user_id', $user->id)
+
+            $favorite = Favorite::where('user_id', $this->user->id)
                 ->where('Store_id', $id)
                 ->first();
 

@@ -6,21 +6,18 @@ use Exception;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AppController;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\SubCategoryResource;
 use App\Http\Resources\CategoryDetailResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class CategoryController extends Controller
+class CategoryController extends AppController
 {
-    public function index(Request $request)
+    public function index()
     {
-        $user = $this->getUser($request);
-        if (!$user) {
-            return $this->unauthorizedResponse();
-        }
+
 
         try {
             $categories = $this->getCategories(8);
@@ -36,12 +33,9 @@ class CategoryController extends Controller
 
 
 
-    public function show(Request $request, $id, $subCategoryId = null)
+    public function show( $id, $subCategoryId = null)
     {
-        $user = $this->getUser($request);
-        if (!$user) {
-            return $this->unauthorizedResponse();
-        }
+
 
         try {
             $category = $this->getCategoryById($id);
@@ -50,8 +44,8 @@ class CategoryController extends Controller
             if ($subCategoryId && !$this->subcategoryExists($category, $subCategoryId)) {
                 return $this->notFoundResponse('SUBCATEGORY_NOT_FOUND');
             }
-            if($subCategoryId){
-                $category =Category::findOrFail($id);
+            if ($subCategoryId) {
+                $category = Category::findOrFail($id);
                 return $this->successResponse([
                     'category' => new CategoryDetailResource($category),
                     // 'sub_categories' => SubCategoryResource::collection($category->subCategories),

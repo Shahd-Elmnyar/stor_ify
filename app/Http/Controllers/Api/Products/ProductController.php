@@ -9,20 +9,16 @@ use App\Models\CartItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AppController;
 use App\Http\Resources\ProductResource;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class ProductController extends Controller
+class ProductController extends AppController
 {
     public function search(Request $request)
     {
         try {
-            $user = $this->getUser($request);
-            if (!$user) {
-                return $this->unauthorizedResponse();
-            }
 
             $validated = $request->validate([
                 'search' => 'required|string|max:255',

@@ -10,23 +10,20 @@ use App\Models\Favorite;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AppController;
 use App\Http\Resources\ProductResource;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class ProductController extends Controller
+class ProductController extends AppController
 {
     public function index(Request $request)
     {
         try {
-            $user = $this->getUser($request);
-            if (!$user) {
-                return $this->unauthorizedResponse();
-            }
 
 
-            $favoriteProducts = $this->getUserFavoriteProducts($user->id);
+
+            $favoriteProducts = $this->getUserFavoriteProducts();
             if ($favoriteProducts->isEmpty()) {
                 return $this->notFoundResponse('NO_FAVORITE_PRODUCTS');
             }
@@ -39,10 +36,10 @@ class ProductController extends Controller
             return $this->genericErrorResponse();
         }
     }
-    private function getUserFavoriteProducts($userId)
+    private function getUserFavoriteProducts()
     {
         return Favorite::with('product')
-            ->where('user_id', $userId)
+            ->where('user_id', $this->user->id)
             ->get()
             ->pluck('product')
             ->filter();
@@ -51,10 +48,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         try {
-            $user = $this->getUser($request);
-            if (!$user) {
-                return $this->unauthorizedResponse();
-            }
+
 
             // Check if the product exists
             $productExists = Product::where('id', $request->product_id)->exists();
@@ -63,7 +57,7 @@ class ProductController extends Controller
             }
 
             // Check if the product is already in favorites
-            $alreadyFavorited = Favorite::where('user_id', $user->id)
+            $alreadyFavorited = Favorite::where('user_id', $this->user->id)
                 ->where('product_id', $request->product_id)
                 ->exists();
             if ($alreadyFavorited) {
@@ -74,7 +68,7 @@ class ProductController extends Controller
             }
 
             $favorite = Favorite::firstOrCreate([
-                'user_id' => $user->id,
+                'user_id' => $this->user->id,
                 'product_id' => $request->product_id,
             ]);
 
@@ -87,12 +81,9 @@ class ProductController extends Controller
     public function destroy(Request $request, $id)
     {
         try {
-            $user = $this->getUser($request);
-            if (!$user) {
-                return $this->unauthorizedResponse();
-            }
 
-            $favorite = Favorite::where('user_id', $user->id)
+
+            $favorite = Favorite::where('user_id', $this->user->id)
                 ->where('product_id', $id)
                 ->first();
 
@@ -106,5 +97,4 @@ class ProductController extends Controller
             return $this->genericErrorResponse();
         }
     }
-
 }

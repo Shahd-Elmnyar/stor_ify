@@ -7,22 +7,19 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AppController;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class CartController extends Controller
+class CartController extends AppController
 {
 
     public function addProductToCart(Request $request, $productId)
     {
         try {
-            $user = $this->getUser($request);
-            if (!$user) {
-                return $this->unauthorizedResponse();
-            }
-            $userId = $user->id; // Extract the user ID
+
+            $userId = $this->user->id; // Extract the user ID
 
             // Validate request data
             $validator = Validator::make(
@@ -101,16 +98,12 @@ class CartController extends Controller
 
     public function showCart(Request $request)
     {
-        $user = $this->getUser($request);
-        if (!$user) {
-            return $this->unauthorizedResponse();
-        }
 
-        $cart = Cart::where('user_id', $user->id)->with('cartItems.product')->first();
+        $cart = Cart::where('user_id', $this->user->id)->with('cartItems.product')->first();
 
         if (!$cart) {
             return $this->successResponse([
-                'CART_EMPTY'
+                'cart' => []
             ]);
         }
 
@@ -129,11 +122,8 @@ class CartController extends Controller
     public function deleteProductFromCart(Request $request, $productId)
     {
         try {
-            $user = $this->getUser($request);
-            if (!$user) {
-                return $this->unauthorizedResponse();
-            }
-            $userId = $user->id; // Extract the user ID
+
+            $userId = $this->user->id; // Extract the user ID
 
 
             // Find the cart

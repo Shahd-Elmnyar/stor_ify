@@ -15,11 +15,15 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
-    public function getUser(Request $request)
+    public function checkAuthorization($request)
     {
-        return $request->user();
-    }
+        $user = $request->user();
 
+        if (!$user) {
+            return $this->unauthorizedResponse();
+        }
+        return $user;
+    }
     public function unauthorizedResponse()
     {
         return response()->json([
@@ -51,11 +55,11 @@ class Controller extends BaseController
         ], 403);
     }
 
-    public function successResponse($data=" ")
+    public function successResponse($data= "")
     {
         return response()->json([
             'code' => 'SUCCESS',
-            'data' => $data,
+            $data,
         ], 200);
     }
 

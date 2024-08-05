@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api\Stores;
 use Exception;
 use App\Models\Store;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\AppController;
 use App\Http\Resources\BranchResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryDetailResource;
@@ -13,15 +13,12 @@ use App\Models\Product;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\StoreResource;
 
-class StoreController extends Controller
+class StoreController extends AppController
 {
-    public function getStores(Request $request, $categoryID = null) // Accept category ID as an optional parameter
+    public function getStores($categoryID = null) // Accept category ID as an optional parameter
     {
         try {
-            $user = $this->getUser($request);
-            if (!$user) {
-                return $this->unauthorizedResponse();
-            }
+
 
             $query = Store::query();
 
@@ -36,8 +33,8 @@ class StoreController extends Controller
 
             // Return the response using the StoreResource
             return $this->successResponse([
-                    'stores' => StoreResource::collection($stores),
-                    'pagination' => $this->getPaginationData($stores),
+                'stores' => StoreResource::collection($stores),
+                'pagination' => $this->getPaginationData($stores),
             ]);
         } catch (\Exception $e) {
             // Handle the exception and return an error response
@@ -45,13 +42,10 @@ class StoreController extends Controller
         }
     }
 
-    public function getProductsWithDiscount(Request $request, $storeId) // New function to get products with discount
+    public function getProductsWithDiscount($storeId) // New function to get products with discount
     {
         try {
-            $user = $this->getUser($request);
-            if (!$user) {
-                return $this->unauthorizedResponse();
-            }
+
 
             $products = Product::where('store_id', $storeId)
                 ->whereNotNull('discount')
@@ -59,25 +53,23 @@ class StoreController extends Controller
                 ->paginate(6);
 
             return $this->successResponse([
-                    'products' => ProductResource::collection($products),
-                    'pagination' => $this->getPaginationData($products),
+                'products' => ProductResource::collection($products),
+                'pagination' => $this->getPaginationData($products),
             ]);
         } catch (Exception $e) {
             return $this->genericErrorResponse();
         }
     }
-    public function getBranches(Request $request, $storeId)
+    public function getBranches($storeId)
     {
         try {
-            $user = $this->getUser($request);
-            if (!$user) {
-                return $this->unauthorizedResponse();
-            }
+
 
             $store = Store::findOrFail($storeId);
             $branches = $store->branches;
 
-            return $this->successResponse([
+            return $this->successResponse(
+                [
                     'branches' => BranchResource::collection($branches),
                 ]
             );
@@ -88,19 +80,17 @@ class StoreController extends Controller
         }
     }
 
-    public function getStoreCategories(Request $request, $storeId)
+    public function getStoreCategories($storeId)
     {
         try {
-            $user = $this->getUser($request);
-            if (!$user) {
-                return $this->unauthorizedResponse();
-            }
+
 
             $store = Store::findOrFail($storeId);
             $categories = $store->categories;
 
             return $this->successResponse([
-                'categories' => CategoryDetailResource::collection($categories)]);
+                'categories' => CategoryDetailResource::collection($categories)
+            ]);
         } catch (ModelNotFoundException $e) {
             return $this->notFoundResponse('CATEGORY_NOT_FOUND');
         } catch (\Exception $e) {
@@ -108,4 +98,3 @@ class StoreController extends Controller
         }
     }
 }
-
