@@ -45,15 +45,13 @@ class AuthController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'code' => 'ERROR',
-                'data' => $validator->errors()->first()], 422);
+                'code' =>  $validator->errors()->first()], 422);
         }
         // Retrieve the user role
         $userRole = Role::where('name', 'user')->first();
         if (!$userRole) {
             return response()->json([
-                'code' =>'ERROR',
-                'data'=> 'USER_ROLE_NOT_FOUND',
+                'code' => 'USER_ROLE_NOT_FOUND',
                 ], 500);
         }
 
@@ -68,12 +66,11 @@ class AuthController extends Controller
 
             $token = $user->createToken('auth-token')->plainTextToken;
             $userData = new UserResource($user);
-            return ApiResponse::success($userData,token:$token);
-            // return response()->json([
-            //     'code' => 'SUCCESS',
-            //     'token' => $token,
-            //     'data' => $userData,
-            // ]);
+            // return $this->successResponse([$userData, $token]);
+            return response()->json([
+                'token' => $token,
+                'user' => $userData,
+            ], 200);
         } catch (QueryException $e) {
             return response()->json(['msg' => 'Database error: ' . $e->getMessage()], 500);
         } catch (\Exception $e) {
@@ -85,8 +82,7 @@ class AuthController extends Controller
     // Check if user is authenticated
     if (!$request->user()) {
         return response()->json([
-            'code'=>'ERROR',
-            'data' => 'USER_NOT_AUTH'], 401);
+            'code'=> 'USER_NOT_AUTH'], 401);
     }
 
     // Attempt to delete the token
@@ -96,14 +92,12 @@ class AuthController extends Controller
             $request->user()->currentAccessToken()->delete();
         } else {
             return response()->json([
-                'code' =>'ERROR',
-                'data'=>'INVALID_TOKEN',
+                'code' =>'INVALID_TOKEN',
                 ], 401);
         }
 
         return response()->json([
             "code" => 'SUCCESS',
-            'data'=>[]
             ], 200);
     } catch (\Exception $e) {
         return response()->json(['code' => 'ERROR: ' . $e->getMessage()], 500);
@@ -157,7 +151,10 @@ class AuthController extends Controller
             // Generate and return token on successful login
             $token = $user->createToken('auth-token')->plainTextToken;
             $userData = new UserResource($user);
-            return ApiResponse::success($userData,token:$token);
+            return response()->json([
+                'token' => $token,
+                'user' => $userData,
+            ], 200);
             // return response()->json([
             //     'code' => 'SUCCESS',
             //     'token' => $token,

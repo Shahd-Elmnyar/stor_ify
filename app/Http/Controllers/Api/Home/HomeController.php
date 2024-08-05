@@ -26,13 +26,10 @@ class HomeController extends AppController
 
 
         return response()->json([
-            'code' => 'SUCCESS',
-            'data' => [
                 'bestSelling' => ProductResource::collection($topProducts),
                 'pagination' => $this->getPaginationData($topProducts),
                 'categories' => CategoryResource::collection($categories),
                 'topStores' => StoreResource::collection($topStores),
-            ]
         ]);
     }
 

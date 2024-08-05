@@ -27,40 +27,34 @@ class Controller extends BaseController
     public function unauthorizedResponse()
     {
         return response()->json([
-            'code' => 'ERROR',
-            'data' => 'USER_NOT_AUTH',
+            'code' => 'USER_NOT_AUTH',
         ], 401);
     }
 
     public function notFoundResponse($message)
     {
         return response()->json([
-            'code' => 'ERROR',
-            'data' => $message,
+            'code' => $message,
         ], 404);
     }
 
     public function genericErrorResponse()
     {
         return response()->json([
-            'code' => 'ERROR',
-            'data' => (object)['GENERIC_ERROR'],
+            'code' =>'GENERIC_ERROR',
         ], 500);
     }
     public function validationErrorResponse($message)
     {
         return response()->json([
-            'code' => 'ERROR',
-            'data' => $message,
+            'code' => $message,
         ], 403);
     }
 
     public function successResponse($data= "")
     {
-        return response()->json([
-            'code' => 'SUCCESS',
-            $data,
-        ], 200);
+        return response()->json(
+            $data, 200);
     }
 
     public function getCategories($perPage)
