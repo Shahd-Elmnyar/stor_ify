@@ -17,12 +17,9 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProductController extends AppController
 {
-    public function index(Request $request)
+    public function index()
     {
         try {
-
-
-
             $favoriteProducts = $this->getUserFavoriteProducts();
             if ($favoriteProducts->isEmpty()) {
                 return $this->notFoundResponse('NO_FAVORITE_PRODUCTS');
@@ -48,8 +45,6 @@ class ProductController extends AppController
     public function store(Request $request)
     {
         try {
-
-
             // Check if the product exists
             $productExists = Product::where('id', $request->product_id)->exists();
             if (!$productExists) {
@@ -78,7 +73,7 @@ class ProductController extends AppController
         }
     }
 
-    public function destroy(Request $request, $id)
+    public function destroy( $id)
     {
         try {
 

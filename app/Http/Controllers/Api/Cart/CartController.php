@@ -85,9 +85,7 @@ class CartController extends AppController
             // Update the cart's total price
             $this->updateTotalCartPrice($cart, $cartItem);
 
-            return $this->successResponse(
-                'PRODUCT_ADDED_TO_CART',
-            );
+            return $this->successResponse();
         } catch (ModelNotFoundException $e) {
             return $this->notFoundResponse('NO_PRODUCT_FOUND');
         } catch (Exception $e) {
@@ -152,9 +150,7 @@ class CartController extends AppController
                 $cart->delete();
             }
 
-            return $this->successResponse(
-                'PRODUCT_REMOVED_FROM_CART',
-            );
+            return $this->successResponse();
         } catch (ModelNotFoundException $e) {
             return $this->notFoundResponse('NO_PRODUCT_FOUND');
         } catch (Exception $e) {

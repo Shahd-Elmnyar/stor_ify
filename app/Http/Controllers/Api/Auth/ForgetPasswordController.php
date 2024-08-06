@@ -25,10 +25,9 @@ class ForgetPasswordController extends Controller
                 'email.exists' => 'USER_NOT_FOUND',
             ]);
             if ($validator->fails()) {
-                return response()->json([
-                    'code' => 'ERROR',
-                    'data' => $validator->errors()->first(),
-                ], 422);
+                return $this->validationErrorResponse(
+                    $validator->errors()->first()
+                );
             }
             $user = User::where('email', $request->email)->first();
             if (!$user) {
@@ -36,10 +35,7 @@ class ForgetPasswordController extends Controller
             }
 
             $user->notify(new ResetPasswordVerificationNotification());
-            return response()->json([
-                'code' => 'SUCCESS',
-                'data' => (object)[],
-            ], 200);
+            return $this->successResponse();
         } catch (\Exception $e) {
             Log::error('Error during forget password process: ' . $e->getMessage());
             return $this->genericErrorResponse();

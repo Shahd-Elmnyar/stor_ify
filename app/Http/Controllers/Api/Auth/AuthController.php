@@ -44,8 +44,8 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json([
-                'code' =>  $validator->errors()->first()], 422);
+            return $this->validationErrorResponse(
+                $validator->errors()->first());
         }
         // Retrieve the user role
         $userRole = Role::where('name', 'user')->first();
@@ -66,11 +66,13 @@ class AuthController extends Controller
 
             $token = $user->createToken('auth-token')->plainTextToken;
             $userData = new UserResource($user);
-            // return $this->successResponse([$userData, $token]);
-            return response()->json([
-                'token' => $token,
+            return $this->successResponse([
                 'user' => $userData,
-            ], 200);
+                'token'=> $token]);
+            // return response()->json([
+            //     'token' => $token,
+            //     'user' => $userData,
+            // ], 200);
         } catch (QueryException $e) {
             return response()->json(['msg' => 'Database error: ' . $e->getMessage()], 500);
         } catch (\Exception $e) {
@@ -78,31 +80,21 @@ class AuthController extends Controller
         }
     }
     public function logout(Request $request)
-{
-    // Check if user is authenticated
-    if (!$request->user()) {
-        return response()->json([
-            'code'=> 'USER_NOT_AUTH'], 401);
-    }
+    {
+        // Check if user is authenticated
 
-    // Attempt to delete the token
-    try {
-        // Check if the current access token is valid
-        if ($request->user()->currentAccessToken()) {
-            $request->user()->currentAccessToken()->delete();
-        } else {
-            return response()->json([
-                'code' =>'INVALID_TOKEN',
-                ], 401);
+        try {
+            // Check if the current access token is valid
+            if ($request->user()->currentAccessToken()) {
+                $request->user()->currentAccessToken()->delete();
+            } else {
+                return $this->unauthorizedResponse();
+            }
+            return $this->successResponse();
+        } catch (\Exception $e) {
+            return $this->genericErrorResponse('auth.error_occurred', ['error' => $e->getMessage()]);
         }
-
-        return response()->json([
-            "code" => 'SUCCESS',
-            ], 200);
-    } catch (\Exception $e) {
-        return response()->json(['code' => 'ERROR: ' . $e->getMessage()], 500);
     }
-}
 
 
 
@@ -133,9 +125,7 @@ class AuthController extends Controller
 
         // Check if validation fails
         if ($validator->fails()) {
-            return response()->json([
-                'code' => 'ERROR',
-                'data' => $validator->errors()->first()], 422);
+            return $this->validationErrorResponse($validator->errors()->first());
         }
         // Find user by email
         $user = User::where('email', $request->email)->first();
@@ -143,18 +133,17 @@ class AuthController extends Controller
         // Check if user exists and password matches
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json([
-                'code' => 'ERROR',
-                'data' => 'INVALID_CREDENTIALS'], 401);
+                'code' =>'INVALID_CREDENTIALS'], 401);
         }
 
         try {
             // Generate and return token on successful login
             $token = $user->createToken('auth-token')->plainTextToken;
             $userData = new UserResource($user);
-            return response()->json([
-                'token' => $token,
+            return $this->successResponse([
                 'user' => $userData,
-            ], 200);
+                'token' => $token
+            ]);
             // return response()->json([
             //     'code' => 'SUCCESS',
             //     'token' => $token,

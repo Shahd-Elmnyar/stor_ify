@@ -1,167 +1,124 @@
-register , login
--------------------------------------------------------
+1 . @POST("register")
+username
+email
 password
+password_confirmation
 
---password < 8 , password doesn't contain
-        at least one uppercase letter,
-        at least one lowercase letter,
-        at least one digit ,
-        at least one special character
-
-    {
-        "code": "ERROR",
-        "data": "PASSWORD_INVALID_FORMAT"
-    }
-
---password doesn't exist
-    {
-        "code": "ERROR",
-        "data": "PASSWORD_REQUIRED"
-    }
-
---password doesn't match  (register only)
-    {
-        "code": "ERROR",
-        "data": "PASSWORD_NOT_MATCHED"
-    }
-
-
-------------------------------
+2 . @POST("login")
 email
-
---email must be a valid email address
-
+password
+-------------------------------------------------------
     {
-        "code": "ERROR",
-        "data": "EMAIL_INVALID_FORMAT"
-    }
-
---email exists in database  (register only)
-    {
-        "code": "ERROR",
-        "data": "EMAIL_TAKEN"
-    }
-
----email doesn't exist
-    {
-        "code": "ERROR",
-        "data": "EMAIL_REQUIRED"
-    }
-------------------------------
-username ( register only )
-
---username exists in database
-    {
-        "code": "ERROR",
-        "data": "USERNAME_TAKEN"
-    }
-
----username doesn't exist
-    {
-        "code": "ERROR",
-        "data": "USERNAME_REQUIRED"
-    }
----username < 4
-    {
-        "code": "ERROR",
-        "data": "USERNAME_INVALID_FORMAT"
+        "code": "PASSWORD_INVALID_FORMAT"
     }
 
 
-------------------------------
-email or password wrong (login only)
     {
-        "code": "ERROR",
-        "data": "INVALID_CREDENTIALS"
+        "code": "PASSWORD_REQUIRED"
     }
 
-------------------------------
 
-success
+    {
+        "code": "PASSWORD_NOT_MATCHED"
+    }
+
+
+    {
+        "code": "EMAIL_INVALID_FORMAT"
+    }
+
+ (register only)
+ -------------------------------------------------------
+    {
+        "code": "EMAIL_TAKEN"
+    }
+
+    {
+        "code": "EMAIL_REQUIRED"
+    }
+
+
+    {
+        "code": "USERNAME_TAKEN"
+    }
+
+    {
+        "code": "USERNAME_REQUIRED"
+    }
+
+    {
+        "code": "USERNAME_INVALID_FORMAT"
+    }
+
+ (login only)
+ -------------------------------------------------------
+    {
+        "code": "INVALID_CREDENTIALS"
+    }
+
 
 {
-    "code": "SUCCESS",
-    "data": {
-        "id": 17,
-        "username": "shahdMElmnyar",
-        "email": "shahdmohamedElmnyar@gmail.com"
+    "user": {
+        "id": 7,
+        "username": "shahd0",
+        "email": "shahdmohamed0@gmail.com"
     },
-    "token": "24|ooXXjL6oF83PCpq2wclQwz8G7nL2CLlzwUsdXqVj3750cbcb"
+    "token": "9|1DaeyoiXNPKGo0fAAxhP5IM6aAlhkvfkgngg9BJbe90e0ea5"
 }
 
 
-
-forget password
 -------------------------------------------------------
+3 . @POST("forget-password")
 email
-
---email must be a valid email address
+-------------------------------------------------------
 
     {
-        "code": "ERROR",
-        "data": "EMAIL_INVALID_FORMAT"
+        "code": "EMAIL_INVALID_FORMAT"
     }
 
---email doesn't exists in database
     {
-        "code": "ERROR",
-        "data": "USER_NOT_FOUND"
+        "code": "USER_NOT_FOUND"
     }
 
----email doesn't exist
     {
-        "code": "ERROR",
-        "data": "EMAIL_REQUIRED"
+        "code": "EMAIL_REQUIRED"
     }
 
-------------------------------
 
 success
 
-{
-    "code": "SUCCESS",
-    "data": {}
-}
+status 200
+" "
 
-
-validate-otp
 -------------------------------------------------------
+4 . @POST("validate-otp")
 email
-
---email must be a valid email address
-
+otp
+-------------------------------------------------------
     {
         "code": "ERROR",
         "data": "EMAIL_INVALID_FORMAT"
     }
 
---email doesn't exists in database
     {
         "code": "ERROR",
         "data": "USER_NOT_FOUND"
     }
 
----email doesn't exist
     {
         "code": "ERROR",
         "data": "EMAIL_REQUIRED"
     }
 
--------------------------------------
-otp
---otp doesn't exists
     {
         "code": "ERROR",
         "data": "OTP_REQUIRED"
     }
 
---otp > 4
     {
         "code": "ERROR",
         "data": "INVALID_OTP_FORMAT"
     }
-
- --otp is wrong or the email doesn't have otp
 
     {
         "code": "ERROR",
@@ -169,90 +126,79 @@ otp
     }
 
 
-------------------------------
-
 success
 
-{
-    "code": "SUCCESS",
-    "data": {}
-}
+status 200
+" "
 
 
-reset-password
 -------------------------------------------------------
+5 . @POST("reset-password")
 email
-
---email must be a valid email address
-
-    {
-        "code": "ERROR",
-        "data": "EMAIL_INVALID_FORMAT"
-    }
-
---email doesn't exists in database
-    {
-        "code": "ERROR",
-        "data": "USER_NOT_FOUND"
-    }
-
----email doesn't exist
-    {
-        "code": "ERROR",
-        "data": "EMAIL_REQUIRED"
-    }
-------------------------------
 password
-
---password < 8 , password doesn't contain
-        at least one uppercase letter,
-        at least one lowercase letter,
-        at least one digit ,
-        at least one special character
+password_confirmation
+-------------------------------------------------------
 
     {
-        "code": "ERROR",
-        "data": "PASSWORD_INVALID_FORMAT"
+        "code":"EMAIL_INVALID_FORMAT"
     }
 
---password doesn't exist
     {
-        "code": "ERROR",
-        "data": "PASSWORD_REQUIRED"
+        "code":"USER_NOT_FOUND"
     }
 
---password doesn't match  (register only)
+
     {
-        "code": "ERROR",
-        "data": "PASSWORD_NOT_MATCHED"
+        "code":"EMAIL_REQUIRED"
     }
 
-------------------------------
+    {
+        "code":"PASSWORD_INVALID_FORMAT"
+    }
 
---when the email doesn't have validate otp
 
-{
-    "code": "ERROR",
-    "data": "INVALID_EMAIL_OR_OTP"
-}
+    {
+        "code":"PASSWORD_REQUIRED"
+    }
 
-------------------------------
+    {
+        "code":"PASSWORD_NOT_MATCHED"
+    }
+
+
+    {
+        "code": "INVALID_EMAIL_OR_OTP"
+    }
+
 
 success
 
+status 200
+" "
+
+
+-------------------------------------------------------
+@POST("logout")
+-------------------------------------------------------
 {
-    "code": "SUCCESS",
-    "data": {}
+    "code": "USER_NOT_AUTH"
 }
 
+success
 
-home
--------------------------------------------------------------------------------
+status 200
+" "
+
+
+
+
+----------------------------------------------------------
+@GET("home")
+----------------------------------------------------------
 if user not authenticated
 
      {
-        "code": "ERROR",
-        "data": "USER_NOT_AUTH"
+        "code":"USER_NOT_AUTH"
     }
 
 ------------------------------

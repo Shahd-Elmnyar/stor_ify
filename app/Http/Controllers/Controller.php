@@ -51,7 +51,7 @@ class Controller extends BaseController
         ], 403);
     }
 
-    public function successResponse($data= "")
+    public function successResponse($data= " ")
     {
         return response()->json(
             $data, 200);

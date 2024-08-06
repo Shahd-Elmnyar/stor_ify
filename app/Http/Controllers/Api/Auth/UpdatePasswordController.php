@@ -38,27 +38,21 @@ class UpdatePasswordController extends Controller
             ]);
 
             if ($validator->fails()) {
-                return response()->json([
-                    'code' => 'ERROR',
-                    'data' => $validator->errors()->first()
-                ], 422);
+                return $this->validationErrorResponse(
+                    $validator->errors()->first()
+                );
             }
-
             $user = User::where('email', $request->email)->first();
 
             if (!$user || !$user->otp_validated) {
                 return response()->json([
-                    'code' => 'ERROR',
-                    'data' => 'INVALID_EMAIL_OR_OTP'
+                    'code' => 'INVALID_EMAIL_OR_OTP'
                 ], 401);
             }
 
             $user->update(['password' => Hash::make($request->password), 'otp_validated' => false]);
 
-            return response()->json([
-                'code' => 'SUCCESS',
-                'data' => (object)[]
-            ], 200);
+            return $this->successResponse();
         } catch (\Exception $e) {
             Log::error('Error during password update process: ' . $e->getMessage());
 
