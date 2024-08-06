@@ -12,6 +12,7 @@ class Order extends Model
         'user_id',
         'status',
         'total',
+        'payment_id',
         'delivery_date',
         'delivery_time',
     ];
@@ -23,7 +24,7 @@ class Order extends Model
      */
 
     protected $casts = [
-        'delivery_date' => 'date',
+        'delivery_date' => 'date:Y-m-d',
         'delivery_time' => 'datetime:H:i:s', // Correct cast for time
         'total' => 'float',
     ];
@@ -38,6 +39,6 @@ class Order extends Model
     }
     public function payment()
     {
-        return $this->hasOne(Payment::class);
+        return $this->belongsTo(Payment::class);
     }
 }

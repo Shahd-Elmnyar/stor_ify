@@ -18,7 +18,8 @@ class OrderFactory extends Factory
     {
         return [
             'user_id' => \App\Models\User::factory(),
-            'status' => $this->faker->randomElement(['processing', 'completed']),
+            'payment_id' => \App\Models\Payment::factory(),
+            'status' => $this->faker->randomElement(['processing', 'completed','pending']),
             'total' => $this->faker->randomFloat(2, 10, 1000),
             'delivery_date' => $this->faker->date(),
             'delivery_time' => $this->faker->time('H:i:s'),

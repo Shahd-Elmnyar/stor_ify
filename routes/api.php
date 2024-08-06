@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Home\HomeController;
 use App\Http\Controllers\Api\Stores\StoreController;
 use App\Http\Controllers\Api\Auth\ValidateOtpController;
 use App\Http\Controllers\Api\Favorite\ProductController;
+use App\Http\Controllers\Api\Checkout\CheckoutController;
 use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
 use App\Http\Controllers\Api\Categories\CategoryController;
@@ -48,6 +49,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('addProduct/{product_id}', [CartController::class, 'addProductToCart']);
     Route::get('/cart', [CartController::class, 'showCart']);
     Route::delete('cart/{productId}', [CartController::class, 'deleteProductFromCart']);
-
+    Route::post('/checkout', [CheckoutController::class, 'checkout']);
 
 });

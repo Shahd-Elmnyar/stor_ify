@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->enum('status',['processing','completed'])->nullable();
+            $table->string('status')->nullable();
             $table->double('total');
             $table->date('delivery_date');
             $table->time('delivery_time');
             $table->timestamps();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('payment_id')->constrained()->onDelete('cascade')->onUpdate('cascade')->nullable();
         });
     }
 

@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->integer('quantity');
             $table->double('price');
-            $table->foreignId('order_id')->constrained();
-            $table->foreignId('product_id')->constrained();
+            $table->double('total');
+            $table->foreignId('product_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('order_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('size_id')->constrained()->onDelete('cascade')->onUpdate('cascade')->nullable();
+            $table->foreignId('color_id')->constrained()->onDelete('cascade')->onUpdate('cascade')->nullable();
             $table->timestamps();
         });
     }
