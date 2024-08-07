@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\Checkout\CheckoutController;
 use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
 use App\Http\Controllers\Api\Categories\CategoryController;
+use App\Http\Controllers\APi\Checkout\StripePaymentController;
 use App\Http\Controllers\Api\Favorite\StoreController as FavoriteStoreController;
 use App\Http\Controllers\Api\Products\ProductController as ProductsProductController;
 
@@ -45,10 +46,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('stores/category/{storeId}', [StoreController::class, 'getStoreCategories']);
     Route::apiResource('favorites', ProductController::class)->only(['index', 'store', 'destroy']);
     Route::apiResource('favoritesStore', FavoriteStoreController::class)->only(['index', 'store', 'destroy']);
+
     Route::post('search', [ProductsProductController::class, 'search']);
+
     Route::post('addProduct/{product_id}', [CartController::class, 'addProductToCart']);
     Route::get('/cart', [CartController::class, 'showCart']);
     Route::delete('cart/{productId}', [CartController::class, 'deleteProductFromCart']);
+
     Route::post('/checkout', [CheckoutController::class, 'checkout']);
+    Route::post('/checkout/{orderId}/payment-method', [CheckoutController::class, 'updatePaymentMethod']);
+    Route::post('/pay/{orderId}', [StripePaymentController::class, 'stripePost']);
+
 
 });
