@@ -215,9 +215,7 @@ status 200
                 "name": "veritatis",
                 "img": "http://localhost:8000/uploads/1.png",
                 "categories": [
-                    1,
                     2,
-                    3,
                     4,
                     5
                 ],
@@ -228,7 +226,7 @@ status 200
                     "img": "http://localhost:8000/uploads/44.png"
                 }
             ],
-            "is_favorited": false
+            "is_favorited": true
         }
     ],
     "pagination": {
@@ -244,13 +242,57 @@ status 200
             "id": 1,
             "name": "dolorem",
             "description": "Consequatur veniam vitae inventore ut quia repudiandae dolor.",
-            "img": "http://localhost:8000/uploads/1.png"
+            "img": "http://localhost:8000/uploads/1.png",
+            "sub_categories": [
+                {
+                    "id": 1,
+                    "name": "sit"
+                },
+                {
+                    "id": 2,
+                    "name": "excepturi"
+                },
+                {
+                    "id": 3,
+                    "name": "consequuntur"
+                },
+                {
+                    "id": 4,
+                    "name": "doloribus"
+                },
+                {
+                    "id": 5,
+                    "name": "suscipit"
+                }
+            ]
         },
         {
             "id": 2,
             "name": "libero",
             "description": "Est impedit quos est libero labore quia.",
-            "img": "http://localhost:8000/uploads/2.png"
+            "img": "http://localhost:8000/uploads/2.png",
+            "sub_categories": [
+                {
+                    "id": 6,
+                    "name": "quos"
+                },
+                {
+                    "id": 7,
+                    "name": "ipsum"
+                },
+                {
+                    "id": 8,
+                    "name": "suscipit"
+                },
+                {
+                    "id": 9,
+                    "name": "dolores"
+                },
+                {
+                    "id": 10,
+                    "name": "dolorem"
+                }
+            ]
         }
     ],
     "topStores": [
@@ -259,9 +301,7 @@ status 200
             "name": "veritatis",
             "img": "http://localhost:8000/uploads/1.png",
             "categories": [
-                1,
                 2,
-                3,
                 4,
                 5
             ],
@@ -269,7 +309,6 @@ status 200
         }
     ]
 }
-
 
 -------------------------------------------------------------------------------
 -------------------------------------------------------------------------------

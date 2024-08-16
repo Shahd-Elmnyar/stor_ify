@@ -73,9 +73,9 @@ class HomeController extends AppController
         return $topStores;
     }
 
-    public function getCategory()
+    private function getCategory()
     {
-        $categories = Category::limit(2)->get();
+        $categories = Category::limit(2)->with('subCategories')->get();
         if ($categories->isEmpty()) {
             return $this->notFoundResponse('NO_CATEGORIES');
         }
