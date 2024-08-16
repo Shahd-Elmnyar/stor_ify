@@ -29,7 +29,7 @@ class CheckoutRequest extends FormRequest
         return [
             'username.required' => 'USERNAME_REQUIRED',
             'username.max' => 'USERNAME_MAX',
-            'phone.required' => 'PHONE_REQUIRED',
+            'phone.required' => 'USERNAME_MAX',
             'phone.max' => 'PHONE_MAX',
             'phone.min' => 'PHONE_MIN',
             'address.required' => 'ADDRESS_REQUIRED',

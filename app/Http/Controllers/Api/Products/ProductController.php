@@ -22,6 +22,10 @@ class ProductController extends AppController
 
             $validated = $request->validate([
                 'search' => 'required|string|max:255',
+            ],[
+                'search.required' => 'SEARCH_REQUIRED',
+                'search.max' => 'SEARCH_MAX',
+                'search.string' => 'SEARCH_STRING',
             ]);
 
             $filters = ['search' => $validated['search']];
@@ -30,7 +34,7 @@ class ProductController extends AppController
                 ->paginate(6);
 
             if ($products->isEmpty()) {
-                return $this->notFoundResponse('NO_PRODUCTS_FOUND');
+                return $this->successResponse(['products'=>[]]);
             }
 
             $productResources = $products->isNotEmpty() ? ProductResource::collection($products) : null;
@@ -41,6 +45,9 @@ class ProductController extends AppController
                     'pagination' => $this->getPaginationData($products),
                 ]
             );
+        } catch (ValidationException $e) {
+            Log::error('Error during search process: ' . $e->getMessage());
+            return $this->validationErrorResponse($e->getMessage());
         } catch (\Exception $e) {
             Log::error('Error during search process: ' . $e->getMessage());
             return $this->genericErrorResponse();

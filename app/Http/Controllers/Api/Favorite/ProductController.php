@@ -26,7 +26,7 @@ class ProductController extends AppController
             }
             // dd(ProductResource::collection($favoriteProducts));
 
-            return $this->successResponse(ProductResource::collection($favoriteProducts));
+            return $this->successResponse(['products'=>ProductResource::collection($favoriteProducts)]);
         } catch (Exception $e) {
             Log::error('Error during get favorite products process: ' . $e->getMessage());
 
@@ -57,8 +57,7 @@ class ProductController extends AppController
                 ->exists();
             if ($alreadyFavorited) {
                 return response()->json([
-                    'code' => 'ERROR',
-                    'data' => 'PRODUCT_ALREADY_FAVORITED',
+                    'code'=> 'PRODUCT_ALREADY_FAVORITED',
                 ], 422);
             }
 
@@ -67,7 +66,7 @@ class ProductController extends AppController
                 'product_id' => $request->product_id,
             ]);
 
-            return $this->successResponse([new ProductResource($favorite->product)]);
+            return $this->successResponse();
         } catch (Exception $e) {
             return $this->genericErrorResponse();
         }
@@ -76,15 +75,13 @@ class ProductController extends AppController
     public function destroy( $id)
     {
         try {
-
-
             $favorite = Favorite::where('user_id', $this->user->id)
                 ->where('product_id', $id)
                 ->first();
 
             if ($favorite) {
                 $favorite->delete();
-                return $this->successResponse('PRODUCT_REMOVED');
+                return $this->successResponse();
             } else {
                 return $this->notFoundResponse('PRODUCT_NOT_FAVORITED');
             }

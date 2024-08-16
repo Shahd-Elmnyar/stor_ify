@@ -9,9 +9,13 @@ class Color extends Model
 {
     protected $fillable = ['color'];
     use HasFactory;
+
     public function products()
     {
         return $this->belongsToMany(Product::class, 'product_colors', 'color_id', 'product_id')
                     ->withTimestamps();
+    }
+    public function cartItems(){
+        return $this->hasMany(CartItem::class);
     }
 }

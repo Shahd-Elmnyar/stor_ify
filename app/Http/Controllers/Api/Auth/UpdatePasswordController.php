@@ -20,11 +20,11 @@ class UpdatePasswordController extends Controller
                 'password' => [
                     'required',
                     'string',
-                    'min:8',              // must be at least 8 characters long
-                    'regex:/[a-z]/',      // must contain at least one lowercase letter
-                    'regex:/[A-Z]/',      // must contain at least one uppercase letter
-                    'regex:/\d/',         // must contain at least one digit
-                    'regex:/[@$!%*#?&]/', // must contain at least one special character
+                    'min:8',              
+                    'regex:/[a-z]/',      
+                    'regex:/[A-Z]/',      
+                    'regex:/\d/',         
+                    'regex:/[@$!%*#?&]/', 
                     'confirmed'
                 ],
             ], [

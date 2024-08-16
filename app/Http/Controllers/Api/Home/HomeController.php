@@ -14,7 +14,7 @@ use App\Http\Resources\CategoryResource;
 
 class HomeController extends AppController
 {
-    public function index(Request $request)
+    public function index()
     {
 
         $topProducts = $this->getTopProducts($this->user->id);
@@ -25,7 +25,7 @@ class HomeController extends AppController
         $topStores = $this->getTopStores();
 
 
-        return response()->json([
+        return $this->successResponse([
                 'bestSelling' => ProductResource::collection($topProducts),
                 'pagination' => $this->getPaginationData($topProducts),
                 'categories' => CategoryResource::collection($categories),

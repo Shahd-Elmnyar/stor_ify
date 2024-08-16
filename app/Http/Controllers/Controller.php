@@ -54,7 +54,7 @@ class Controller extends BaseController
     public function successResponse($data= " ")
     {
         return response()->json(
-            $data, 200);
+            $data , 200);
     }
 
     public function getCategories($perPage)

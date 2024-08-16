@@ -45,12 +45,13 @@ class StoreController extends AppController
     public function getProductsWithDiscount($storeId) // New function to get products with discount
     {
         try {
-
-
             $products = Product::where('store_id', $storeId)
                 ->whereNotNull('discount')
                 ->with('store')
                 ->paginate(6);
+            if (!$products) {
+                return $this->notFoundResponse('PRODUCTS_NOT_FOUND');
+            }
 
             return $this->successResponse([
                 'products' => ProductResource::collection($products),
@@ -63,8 +64,6 @@ class StoreController extends AppController
     public function getBranches($storeId)
     {
         try {
-
-
             $store = Store::findOrFail($storeId);
             $branches = $store->branches;
 
@@ -83,8 +82,6 @@ class StoreController extends AppController
     public function getStoreCategories($storeId)
     {
         try {
-
-
             $store = Store::findOrFail($storeId);
             $categories = $store->categories;
 

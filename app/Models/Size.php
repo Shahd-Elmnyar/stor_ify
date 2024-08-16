@@ -15,5 +15,9 @@ class Size extends Model
         return $this->belongsToMany(Product::class, 'product_sizes', 'size_id', 'product_id')
                     ->withTimestamps();
     }
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
 }
 

@@ -8,6 +8,7 @@ use App\Models\CartItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\AppController;
+use App\Http\Resources\CartItemResource;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -110,9 +111,10 @@ class CartController extends AppController
 
         $totalItems = $cart->cartItems->sum('quantity');
         $totalPrice = $cart->total_price;
+        $cartItems = $cart->cartItems->load('product', 'color', 'size');
 
         return $this->successResponse([
-            'cart' => $cart->cartItems,
+            'cart' => CartItemResource::collection($cart->cartItems),
             'totalItems' => $totalItems,
             'totalPrice' => $totalPrice
         ]);

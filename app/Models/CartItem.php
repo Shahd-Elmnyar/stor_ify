@@ -21,6 +21,16 @@ class CartItem extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    public function size()
+    {
+        return $this->belongsTo(Size::class);
+    }
+
+    public function color()
+    {
+        return $this->belongsTo(Color::class);
+    }
     public function cart()
     {
         return $this->belongsTo(Cart::class);

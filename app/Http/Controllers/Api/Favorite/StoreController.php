@@ -11,26 +11,32 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\AppController;
 use App\Http\Resources\StoreResource;
 
-
-class StoreController extends AppController
+class StoreController extends AppController{
+public function index(Request $request)
 {
-    public function index(Request $request)
-    {
-        try {
-
-
-            $favoriteStores = $this->getUserFavoriteStores();
-            if ($favoriteStores->isEmpty()) {
-                return $this->notFoundResponse('NO_FAVORITE_STORES');
-            }
-
-            return $this->successResponse(StoreResource::collection($favoriteStores));
-        } catch (Exception $e) {
-            Log::error('Error during forget password process: ' . $e->getMessage());
-
-            return $this->genericErrorResponse();
+    try {
+        $favoriteStores = $this->getUserFavoriteStores();
+        if ($favoriteStores->isEmpty()) {
+            return $this->notFoundResponse('NO_FAVORITE_STORES');
         }
+
+        // Filter out null values
+        $favoriteStores = $favoriteStores->filter(function ($store) {
+            return !is_null($store);
+        });
+
+        // Check if the collection is empty after filtering
+        if ($favoriteStores->isEmpty()) {
+            return $this->notFoundResponse('NO_FAVORITE_STORES');
+        }
+
+        return $this->successResponse(['stores' => StoreResource::collection($favoriteStores)]);
+    } catch (Exception $e) {
+        Log::error('Error during get favorite stores process: ' . $e->getMessage());
+        return $this->genericErrorResponse();
     }
+}
+
 
     private function getUserFavoriteStores()
     {
@@ -57,8 +63,7 @@ class StoreController extends AppController
                 ->exists();
             if ($alreadyFavorited) {
                 return response()->json([
-                    'code' => 'ERROR',
-                    'data' => 'STORE_ALREADY_FAVORITED',
+                    'code' => 'STORE_ALREADY_FAVORITED',
                 ], 422);
             }
 
@@ -67,7 +72,7 @@ class StoreController extends AppController
                 'store_id' => $request->store_id,
             ]);
 
-            return $this->successResponse([new StoreResource($favorite->store)]);
+            return $this->successResponse();
         } catch (Exception $e) {
             return $this->genericErrorResponse();
         }
@@ -84,7 +89,7 @@ class StoreController extends AppController
 
             if ($favorite) {
                 $favorite->delete();
-                return $this->successResponse('STORE_REMOVED');
+                return $this->successResponse();
             } else {
                 return $this->notFoundResponse('STORE_NOT_FAVORITED');
             }

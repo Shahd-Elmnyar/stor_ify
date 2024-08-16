@@ -5,9 +5,7 @@ namespace App\Http\Controllers\Api\Auth;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RegisterRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\QueryException;
@@ -23,11 +21,11 @@ class AuthController extends Controller
             'password' => [
                 'required',
                 'string',
-                'min:8',              // must be at least 8 characters long
-                'regex:/[a-z]/',      // must contain at least one lowercase letter
-                'regex:/[A-Z]/',      // must contain at least one uppercase letter
-                'regex:/\d/',         // must contain at least one digit
-                'regex:/[@$!%*#?&]/', // must contain at least one special character
+                'min:8',  
+                'regex:/[a-z]/', 
+                'regex:/[A-Z]/',
+                'regex:/\d/', 
+                'regex:/[@$!%*#?&]/',
                 'confirmed'
             ],
             ], [
@@ -107,11 +105,11 @@ class AuthController extends Controller
             'password' => [
                 'required',
                 'string',
-                'min:8',              // must be at least 8 characters long
-                'regex:/[a-z]/',      // must contain at least one lowercase letter
-                'regex:/[A-Z]/',      // must contain at least one uppercase letter
-                'regex:/\d/',         // must contain at least one digit
-                'regex:/[@$!%*#?&]/', // must contain at least one special character
+                'min:8',
+                'regex:/[a-z]/',
+                'regex:/[A-Z]/',
+                'regex:/\d/',
+                'regex:/[@$!%*#?&]/',
             ],
             ], [
                 'email.required' => 'EMAIL_REQUIRED',

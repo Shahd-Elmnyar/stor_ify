@@ -21,7 +21,7 @@ class CategoryController extends AppController
 
         try {
             $categories = $this->getCategories(8);
-            return $this->successResponse(CategoryResource::collection($categories));
+            return $this->successResponse(['categories' => CategoryResource::collection($categories)]);
         } catch (ModelNotFoundException $e) {
             Log::error('ModelNotFoundException in index: ' . $e->getMessage());
             return $this->notFoundResponse('CATEGORIES_NOT_FOUND');

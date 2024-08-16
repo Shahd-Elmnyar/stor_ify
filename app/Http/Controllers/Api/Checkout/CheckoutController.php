@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\Checkout;
 
-use App\Http\Controllers\AppController;
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Payment;
@@ -11,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\OrderResource;
 use App\Http\Requests\CheckoutRequest;
+use App\Http\Controllers\AppController;
+use Illuminate\Support\Facades\Validator;
 
 
 class CheckoutController extends AppController
@@ -62,9 +63,17 @@ class CheckoutController extends AppController
         // Log the request data for debugging
         // Log::info('Update payment method request received');
         // dd($request->all());
-        $request->validate([
+        $validator  = $validator = Validator::make(
+            $request->all(), [
             'payment_method' => 'required|in:cash,card',
+        ], [
+            'payment_method.in' => 'INVALID_PAYMENT_METHOD',
+            'payment_method.required' => 'PAYMENT_METHOD_REQUIRED',
         ]);
+        // dd($validator->fails());
+        if ($validator->fails()) {
+            return $this->validationErrorResponse($validator->errors()->first());
+        }
         $cart = Cart::where('user_id', $this->user->id)->first();
         if (!$cart || $cart->cartItems->isEmpty()) {
             return response()->json(['code' => 'CART_EMPTY'], 400);
