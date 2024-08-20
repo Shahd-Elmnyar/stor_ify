@@ -5,17 +5,17 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ImageResource extends JsonResource
+class ImageResource extends MainResource
 {
     /**
      * Transform the resource into an array.
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    protected function transformData(array $data): array
     {
         return [
-            'img' =>url('uploads/'.$this->img) ,
+            'img' => url('uploads/' . $this->img),
         ];
     }
 }

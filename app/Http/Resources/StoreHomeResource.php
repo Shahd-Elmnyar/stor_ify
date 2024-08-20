@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class CategoryDetailResource extends MainResource
+class StoreHomeResource extends MainResource
 {
     /**
      * Transform the resource into an array.
@@ -14,12 +14,13 @@ class CategoryDetailResource extends MainResource
      */
     protected function transformData(array $data): array
     {
+
         return [
             'id' => $this->id,
             'name' => $this->name,
-            // 'sub_categories' => SubCategoryResource::collection($this->whenLoaded('subCategories')),
-            // 'products' =>  ProductResource::collection($this->whenLoaded('products')),
-            'products' => isset($data['products']) ? ProductResource::collection($this->whenLoaded('products')) : null,
+            'img' => url('uploads/' . $this->img),
+            'categories' => new CategoryResource($this->whenLoaded('categories')),
+            'total_products_ordered' => $this->products()->count(),
         ];
     }
 }
