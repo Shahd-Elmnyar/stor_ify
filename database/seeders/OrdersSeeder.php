@@ -16,11 +16,9 @@ class OrdersSeeder extends Seeder
      */
     public function run()
     {
-        // Get all users and products
         $users = User::all();
         $products = Product::all();
 
-        // Create orders and order items
         $users->each(function ($user) use ($products) {
             $orders = Order::factory(rand(1, 3))->create(['user_id' => $user->id]);
 

@@ -19,8 +19,14 @@ class CategoryFactory extends Factory
         static $i = 0;
         $i++;
         return [
-            'name' => fake()->word,
-            'description' => fake()->sentence,
+            'name' => json_encode([
+                'en' => $this->faker->word,
+                'ar' => $this->faker->word,
+            ]),
+            'description' => json_encode ([
+                'en' => $this->faker->paragraph,
+                'ar' => $this->faker->paragraph,
+            ]),
             'img' => $i.".png",
         ];
     }

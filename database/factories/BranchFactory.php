@@ -18,8 +18,14 @@ class BranchFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->company,
-            'address' => fake()->address,
+            'name' => json_encode ([
+                'en' => $this->faker->company(),
+                'ar' => $this->faker->company(),
+            ]),
+            'address' => json_encode ([
+                'en' => $this->faker->address(),
+                'ar' => $this->faker->address(),
+            ]),
             'store_id' => Store::factory(),
         ];
     }

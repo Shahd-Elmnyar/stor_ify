@@ -17,11 +17,48 @@ class ColorFactory extends Factory
     public function definition(): array
     {
         return [
-            'color' => $this->faker->randomElement([
-                'red', 'blue', 'green', 'yellow', 'black', 'white',
-                'purple', 'orange', 'pink', 'brown', 'gray', 'cyan',
-                'magenta', 'lime', 'indigo', 'violet', 'gold', 'silver',
-                'bronze', 'teal', 'navy', 'maroon', 'olive', 'coral'
+            'color' => json_encode([
+                'en' =>
+                $this->faker->randomElement([
+                    'red',
+                    'blue',
+                    'green',
+                    'yellow',
+                    'black',
+                    'white',
+                    'purple',
+                    'orange',
+                    'pink',
+                    'brown',
+                    'gray',
+                    'cyan',
+                    'magenta',
+                    'indigo',
+                    'violet',
+                    'gold',
+                    'silver',
+                    'bronze',
+                ]),
+                'ar' => $this->faker->randomElement([
+                    'احمر',
+                    'ازرق',
+                    'اخضر',
+                    'اصفر',
+                    'أسود',
+                    'ابيض',
+                    'بنفسجي',
+                    'برتقالي',
+                    'وردي',
+                    'بني',
+                    'رمادي',
+                    'سماوي',
+                    'أرجواني',
+                    'فضي',
+                    'نيلي',
+                    'زهري',
+                    'برونزي',
+                    'ذهبي',
+                ])
             ]),
         ];
     }
