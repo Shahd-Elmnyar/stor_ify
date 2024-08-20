@@ -41,7 +41,7 @@ public function index(Request $request)
     private function getUserFavoriteStores()
     {
         return Favorite::with('store')
-            ->where('user_id', $this->user->id)
+            ->where('user_id', $this->user->id)->with('store.categories')
             ->get()
             ->pluck('store');
     }

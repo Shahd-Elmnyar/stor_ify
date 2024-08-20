@@ -10,6 +10,7 @@ use App\Http\Controllers\AppController;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\CategoryResource;
 use App\Http\Resources\SubCategoryResource;
+use App\Http\Resources\CategoryHomeResource;
 use App\Http\Resources\CategoryDetailResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -21,7 +22,9 @@ class CategoryController extends AppController
 
         try {
             $categories = $this->getCategories(8);
-            return $this->successResponse(['categories' => CategoryResource::collection($categories)]);
+            return $this->successResponse([
+                'categories' => CategoryHomeResource::collection($categories),
+                'pagination' => $this->getPaginationData($categories)]);
         } catch (ModelNotFoundException $e) {
             Log::error('ModelNotFoundException in index: ' . $e->getMessage());
             return $this->notFoundResponse('CATEGORIES_NOT_FOUND');
@@ -48,7 +51,6 @@ class CategoryController extends AppController
                 $category = Category::findOrFail($id);
                 return $this->successResponse([
                     'category' => new CategoryDetailResource($category),
-                    // 'sub_categories' => SubCategoryResource::collection($category->subCategories),
                     'products' => ProductResource::collection($products),
                     'pagination' => $this->getPaginationData($products)
                 ]);
@@ -56,7 +58,6 @@ class CategoryController extends AppController
 
             return $this->successResponse([
                 'category' => new CategoryDetailResource($category),
-                // 'sub_categories' => SubCategoryResource::collection($category->subCategories),
                 'products' => ProductResource::collection($products),
                 'pagination' => $this->getPaginationData($products)
             ]);

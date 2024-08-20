@@ -18,7 +18,6 @@ class Controller extends BaseController
     public function checkAuthorization($request)
     {
         $user = $request->user();
-
         if (!$user) {
             return $this->unauthorizedResponse();
         }
@@ -51,7 +50,7 @@ class Controller extends BaseController
         ], 403);
     }
 
-    public function successResponse($data= " ")
+    public function successResponse($data=" ")
     {
         return response()->json(
             $data , 200);
@@ -82,20 +81,28 @@ class Controller extends BaseController
         return $category->subCategories()->where('id', $subCategoryId)->exists();
     }
 
-    public function getPaginationData($products)
+    public function getPaginationData($data)
     {
-        if ($products instanceof LengthAwarePaginator) {
+        if (is_null($data)) {
+            return [];
+        }
+        // dd(gettype($data), $data);
+
+
+        if ($data instanceof LengthAwarePaginator) {
             return [
-                'total' => $products->total(),
-                'per_page' => $products->perPage(),
-                'current_page' => $products->currentPage(),
-                'last_page' => $products->lastPage(),
-                'next_page_url' => $products->nextPageUrl(),
-                'prev_page_url' => $products->previousPageUrl(),
+                'total' => $data->total(),
+                'per_page' => $data->perPage(),
+                'current_page' => $data->currentPage(),
+                'last_page' => $data->lastPage(),
+                'next_page_url' => $data->nextPageUrl(),
+                'prev_page_url' => $data->previousPageUrl(),
             ];
         }
+
         return [];
     }
+
     public function updateTotalCartPrice($cart, $cartItem = null, $isDeleting = false)
     {
         // Ensure that $cart->total_price is numeric
