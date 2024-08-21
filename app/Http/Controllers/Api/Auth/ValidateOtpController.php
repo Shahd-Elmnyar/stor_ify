@@ -58,13 +58,3 @@ class ValidateOtpController extends Controller
         }
     }
 }
-// $otp2 = $this->otp->validate($request->email, $request->otp);
-
-// if (!$otp2->status) {
-//     return response()->json(['code' => 'ERROR', 'data' => $otp2], 401);
-// }
-
-// $user = User::where('email', $request->email)->first();
-// $user->update(['otp_validated' => true]);
-
-// return response()->json(['code' => 'SUCCESS', 'data' => []], 200);

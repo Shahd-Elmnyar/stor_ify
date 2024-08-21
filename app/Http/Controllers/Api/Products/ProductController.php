@@ -2,17 +2,12 @@
 
 namespace App\Http\Controllers\Api\Products;
 
-use Exception;
-use App\Models\Cart;
 use App\Models\Product;
-use App\Models\CartItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-
 use App\Http\Controllers\AppController;
 use App\Http\Resources\ProductResource;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProductController extends AppController
 {

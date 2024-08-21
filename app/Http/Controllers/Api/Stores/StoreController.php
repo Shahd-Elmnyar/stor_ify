@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api\Stores;
 use Exception;
 use App\Models\Store;
 use App\Models\Product;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\StoreResource;
 use App\Http\Resources\BranchResource;
@@ -29,7 +28,6 @@ class StoreController extends AppController
             }
 
             $stores = $query->with('categories')->paginate(6);
-            // dd(StoreResource::collection($stores));
 
             return $this->successResponse([
                 'stores' => StoreResource::collection($stores),
@@ -42,7 +40,7 @@ class StoreController extends AppController
         }
     }
 
-    public function getProductsWithDiscount($storeId) // New function to get products with discount
+    public function getProductsWithDiscount($storeId)
     {
         try {
             $products = Product::where('store_id', $storeId)

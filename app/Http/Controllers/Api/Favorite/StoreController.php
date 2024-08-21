@@ -6,7 +6,6 @@ use Exception;
 use App\Models\Store;
 use App\Models\Favorite;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\AppController;
 use App\Http\Resources\StoreResource;
@@ -20,12 +19,10 @@ public function index(Request $request)
             return $this->notFoundResponse('NO_FAVORITE_STORES');
         }
 
-        // Filter out null values
         $favoriteStores = $favoriteStores->filter(function ($store) {
             return !is_null($store);
         });
 
-        // Check if the collection is empty after filtering
         if ($favoriteStores->isEmpty()) {
             return $this->notFoundResponse('NO_FAVORITE_STORES');
         }
@@ -51,13 +48,12 @@ public function index(Request $request)
         try {
 
 
-            // Check if the store exists
             $storeExists = Store::where('id', $request->store_id)->exists();
             if (!$storeExists) {
                 return $this->notFoundResponse('STORE_NOT_FOUND');
             }
 
-            // Check if the store is already in favorites
+
             $alreadyFavorited = Favorite::where('user_id', $this->user->id)
                 ->where('store_id', $request->store_id)
                 ->exists();

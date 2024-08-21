@@ -4,12 +4,9 @@ namespace App\Http\Controllers\Api\Categories;
 
 use Exception;
 use App\Models\Category;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\AppController;
 use App\Http\Resources\ProductResource;
-use App\Http\Resources\CategoryResource;
-use App\Http\Resources\SubCategoryResource;
 use App\Http\Resources\CategoryHomeResource;
 use App\Http\Resources\CategoryDetailResource;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

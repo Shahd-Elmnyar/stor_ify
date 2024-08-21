@@ -5,15 +5,11 @@ namespace App\Http\Controllers\Api\Home;
 use App\Models\Store;
 use App\Models\Product;
 use App\Models\Category;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\AppController;
 use App\Http\Resources\CategoryHomeResource;
-// use App\Http\Resources\StoreResource;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\StoreHomeResource;
-
-// use App\Http\Resources\CategoryResource;
 
 class HomeController extends AppController
 {
@@ -35,7 +31,6 @@ class HomeController extends AppController
         $topProducts = $this->getTopProducts($this->user->id);
         $categories = $this->getCategory();
         $topStores = $this->getTopStores();
-        // dd(ProductResource::collection($topProducts),CategoryResource::collection($categories),StoreResource::collection($topStores));
         return $this->successResponse([
                 'bestSelling' => ProductResource::collection($topProducts),
                 'pagination' => $this->getPaginationData($topProducts),
@@ -57,7 +52,6 @@ class HomeController extends AppController
             ->paginate(3);
 
         if ($topProducts->isEmpty()) {
-            // dd('empty');
             $topProducts = Product::with(['store', 'images', 'favorites'  => function ($query)  {
                 $query->where('user_id', $this->user->id);
             }])

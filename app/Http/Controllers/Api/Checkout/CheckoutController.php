@@ -27,7 +27,7 @@ class CheckoutController extends AppController
 
         $order = null;
 
-            // Create the order
+
             $order = Order::create([
                 'total' => $cart->cartItems->sum(fn ($item) => $item->quantity * $item->price),
                 'status' => 'pending',
@@ -48,10 +48,6 @@ class CheckoutController extends AppController
                 ]);
             }
 
-            // // Clear the cart
-            // $cart->cartItems()->delete();
-            // $cart->delete();
-
         return $this->successResponse(
             [
             'order' => new OrderResource($order),
@@ -60,9 +56,7 @@ class CheckoutController extends AppController
     }
     public function updatePaymentMethod(Request $request, $orderId)
     {
-        // Log the request data for debugging
-        // Log::info('Update payment method request received');
-        // dd($request->all());
+
         $validator  = $validator = Validator::make(
             $request->all(), [
             'payment_method' => 'required|in:cash,card',
@@ -70,7 +64,7 @@ class CheckoutController extends AppController
             'payment_method.in' => 'INVALID_PAYMENT_METHOD',
             'payment_method.required' => 'PAYMENT_METHOD_REQUIRED',
         ]);
-        // dd($validator->fails());
+
         if ($validator->fails()) {
             return $this->validationErrorResponse($validator->errors()->first());
         }
@@ -79,7 +73,7 @@ class CheckoutController extends AppController
             return response()->json(['code' => 'CART_EMPTY'], 400);
         }
         $order = Order::findOrFail($orderId);
-        // Retrieve the payment ID from the payments table
+        
         $payment = Payment::where('method', $request->payment_method)->first();
         if (!$payment) {
             return $this->notFoundResponse('PAYMENT_METHOD_NOT_FOUND');

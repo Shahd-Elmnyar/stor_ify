@@ -10,25 +10,21 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\AppController;
 use App\Http\Resources\CartItemResource;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CartController extends AppController
 {
-
     public function addProductToCart(Request $request, $productId)
     {
         try {
+            $userId = $this->user->id;
 
-            $userId = $this->user->id; // Extract the user ID
-
-            // Validate request data
             $validator = Validator::make(
                 $request->all(),
                 [
                     'size_id' => 'required|exists:sizes,id',
                     'quantity' => 'required|integer|min:1',
-                    'color_id' => 'required|exists:colors,id', // Ensure color_id is validated
+                    'color_id' => 'required|exists:colors,id',
                 ],
                 [
                     'size_id.required' => 'SIZE_REQUIRED',
@@ -44,21 +40,16 @@ class CartController extends AppController
                 return $this->validationErrorResponse($validator->errors()->first());
             }
 
-            $data = $validator->validated(); // Retrieve the validated data
+            $data = $validator->validated();
 
-            // Find the product
             $product = $this->getProductById($productId);
-
-            // Check if the size exists for the product
             $this->productSizeCheck($product, $data);
 
-            // Create or find the cart and set the total_price
             $cart = Cart::firstOrCreate(
-                ['user_id' => $userId], // Use the user ID
-                ['total_price' => 0.0] // Ensure total_price is a float
+                ['user_id' => $userId],
+                ['total_price' => 0.0]
             );
 
-            // Check if the product already exists in the cart
             $cartItem = CartItem::where('cart_id', $cart->id)
                 ->where('product_id', $productId)
                 ->where('size_id', $data['size_id'])
@@ -66,24 +57,21 @@ class CartController extends AppController
                 ->first();
 
             if ($cartItem) {
-                // Update the quantity and total if the item exists
                 $cartItem->quantity += $data['quantity'];
                 $cartItem->total = $cartItem->quantity * $product->price;
                 $cartItem->save();
             } else {
-                // Create and save CartItem if it doesn't exist
                 $cartItem = CartItem::create([
                     'cart_id' => $cart->id,
                     'product_id' => $productId,
-                    'price' => $product->price, // Ensure price is included
+                    'price' => $product->price,
                     'size_id' => $data['size_id'],
-                    'color_id' => $data['color_id'], // Ensure color_id is included
+                    'color_id' => $data['color_id'],
                     'quantity' => $data['quantity'],
-                    'total' => ($data['quantity'] * $product->price), // Ensure total is calculated and included
+                    'total' => $data['quantity'] * $product->price,
                 ]);
             }
 
-            // Update the cart's total price
             $this->updateTotalCartPrice($cart, $cartItem);
 
             return $this->successResponse();
@@ -97,21 +85,20 @@ class CartController extends AppController
 
     public function showCart(Request $request)
     {
-
-        $cart = Cart::where('user_id', $this->user->id)->with('cartItems.product')->first();
+        $cart = Cart::where('user_id', $this->user->id)
+            ->with('cartItems.product')
+            ->first();
 
         if (!$cart) {
             return $this->successResponse([
-                'cart' => []
+                'cart' => [],
+                'totalItems' => 0,
+                'totalPrice' => 0.0
             ]);
         }
 
-        // Debugging: Log the cart items
-        Log::info('Cart Items: ' . $cart->cartItems);
-
         $totalItems = $cart->cartItems->sum('quantity');
         $totalPrice = $cart->total_price;
-        $cartItems = $cart->cartItems->load('product', 'color', 'size');
 
         return $this->successResponse([
             'cart' => CartItemResource::collection($cart->cartItems),
@@ -119,35 +106,28 @@ class CartController extends AppController
             'totalPrice' => $totalPrice
         ]);
     }
+
     public function deleteProductFromCart(Request $request, $productId)
     {
         try {
+            $userId = $this->user->id;
 
-            $userId = $this->user->id; // Extract the user ID
-
-
-            // Find the cart
             $cart = Cart::where('user_id', $userId)->first();
             if (!$cart) {
                 return $this->notFoundResponse('CART_IS_EMPTY');
             }
 
-            // Find the cart item
             $cartItem = CartItem::where('cart_id', $cart->id)
                 ->where('product_id', $productId)
                 ->first();
 
             if (!$cartItem) {
-                return $this->notFoundResponse('CART_ITEM_NOT_iN_CART');
+                return $this->notFoundResponse('CART_ITEM_NOT_IN_CART');
             }
 
-            // Delete the cart item
             $cartItem->delete();
-
-            // Update the cart's total price
             $this->updateTotalCartPrice($cart, $cartItem, true);
 
-            // Check if the cart is empty and delete it if it is
             if ($cart->cartItems->isEmpty()) {
                 $cart->delete();
             }
