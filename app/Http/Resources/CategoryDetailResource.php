@@ -17,6 +17,8 @@ class CategoryDetailResource extends MainResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'description' => $this->description,
+            'img' => url("uploads/" . $this->img),
             // 'sub_categories' => SubCategoryResource::collection($this->whenLoaded('subCategories')),
             // 'products' =>  ProductResource::collection($this->whenLoaded('products')),
             'products' => isset($data['products']) ? ProductResource::collection($this->whenLoaded('products')) : null,

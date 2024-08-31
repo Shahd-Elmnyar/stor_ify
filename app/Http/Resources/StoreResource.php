@@ -22,6 +22,16 @@ class StoreResource extends MainResource
             // 'categories' =>  CategoryResource::collection($this->whenLoaded('categories')),
             'categories' => isset($data['categories']) ? CategoryResource::collection($this->whenLoaded('categories')) : [],
             'total_products_ordered' => $this->products()->count(),
+            'is_favorited' => $this->isFavoritedByUser(request()->user()),
+
         ];
+    }
+    protected function isFavoritedByUser($user): bool
+    {
+        if (!$user) {
+            return false;
+        }
+
+        return $this->favorites()->where('user_id', $user->id)->exists();
     }
 }

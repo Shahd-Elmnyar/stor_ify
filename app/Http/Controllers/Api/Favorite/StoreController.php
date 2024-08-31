@@ -16,7 +16,7 @@ public function index(Request $request)
     try {
         $favoriteStores = $this->getUserFavoriteStores();
         if ($favoriteStores->isEmpty()) {
-            return $this->notFoundResponse('NO_FAVORITE_STORES');
+            $favoriteStores = [];
         }
 
         $favoriteStores = $favoriteStores->filter(function ($store) {
@@ -24,7 +24,7 @@ public function index(Request $request)
         });
 
         if ($favoriteStores->isEmpty()) {
-            return $this->notFoundResponse('NO_FAVORITE_STORES');
+            $favoriteStores = [];
         }
 
         return $this->successResponse(['stores' => StoreResource::collection($favoriteStores)]);
