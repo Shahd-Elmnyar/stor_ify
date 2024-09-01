@@ -23,6 +23,7 @@ class StoreResource extends MainResource
             'categories' => isset($data['categories']) ? CategoryResource::collection($this->whenLoaded('categories')) : [],
             'total_products_ordered' => $this->products()->count(),
             'is_favorited' => $this->isFavoritedByUser(request()->user()),
+            'average_rating' => $this->averageRating(),
 
         ];
     }

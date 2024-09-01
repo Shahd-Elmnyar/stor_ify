@@ -34,5 +34,10 @@ class Store extends Model
     {
         return $this->hasMany(Branch::class);
     }
+    public function averageRating()
+    {
+        $average = $this->rates()->avg('rate');
+        return number_format($average, 2);
+    }
 
 }
