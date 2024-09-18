@@ -18,6 +18,7 @@ class UserResource extends MainResource
             'id' => $this->id,
             'username' => $this->username,
             'email' => $this->email,
+            'img' => url('uploads/' . $this->img),
         ];
     }
 }

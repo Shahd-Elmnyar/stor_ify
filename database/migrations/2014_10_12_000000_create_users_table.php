@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('address')->nullable();
             $table->double('latitude')->nullable();
             $table->double('longitude')->nullable();
+            $table->string('img')->nullable();
             $table->foreignId('role_id')->default(2)->constrained();
             $table->rememberToken();
             $table->timestamps();

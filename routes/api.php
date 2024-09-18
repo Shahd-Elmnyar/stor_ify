@@ -2,12 +2,15 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\FCMController;
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\Cart\CartController;
 use App\Http\Controllers\Api\Home\HomeController;
 use App\Http\Controllers\Api\Stores\StoreController;
+use App\Http\Controllers\Api\Settings\langController;
 use App\Http\Controllers\Api\Auth\ValidateOtpController;
 use App\Http\Controllers\Api\Favorite\ProductController;
+use App\Http\Controllers\Api\Settings\ProfileController;
 use App\Http\Controllers\Api\Checkout\CheckoutController;
 use App\Http\Controllers\Api\Auth\ForgetPasswordController;
 use App\Http\Controllers\Api\Auth\UpdatePasswordController;
@@ -15,7 +18,6 @@ use App\Http\Controllers\Api\Categories\CategoryController;
 use App\Http\Controllers\APi\Checkout\StripePaymentController;
 use App\Http\Controllers\Api\Favorite\StoreController as FavoriteStoreController;
 use App\Http\Controllers\Api\Products\ProductController as ProductsProductController;
-use App\Http\Controllers\Api\Settings\langController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,6 +65,15 @@ Route::middleware('lang')->group(function () {
         Route::post('/pay/{orderId}', [StripePaymentController::class, 'stripePost']);
 
         Route::post('/change-lang', [langController::class, 'changeLang']);
+        Route::apiResource('profile',ProfileController::class)->only('index' );
+        Route::delete('/profile', [ProfileController::class, 'deleteAccount']);
+        Route::post('/profile', [ProfileController::class, 'update']);
+        Route::post('/profile/change-password', [ProfileController::class, 'changePassword']);
 
+        // Route::post('/send-notification', [FCMController::class, 'sendFcmNotification']);
+
+        // Route::get('notifications', [FCMController::class, 'getNotifications']);
+        Route::post('update-device-token', [FcmController::class, 'updateDeviceToken']);
+        Route::post('send-fcm-notification', [FcmController::class, 'sendFcmNotification']);
     });
 });
