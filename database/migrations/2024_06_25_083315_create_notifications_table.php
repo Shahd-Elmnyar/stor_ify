@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('notifications', function (Blueprint $table) {
             $table->id();
-            $table->enum('type',['individual','broadcast']);
+            $table->enum('type', ['individual', 'broadcast']);
+            $table->string('title'); 
+            $table->text('body');
             $table->timestamps();
         });
     }
