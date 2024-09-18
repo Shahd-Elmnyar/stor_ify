@@ -86,7 +86,7 @@ class CartController extends AppController
     public function showCart(Request $request)
     {
         $cart = Cart::where('user_id', $this->user->id)
-            ->with('cartItems.product')
+            ->with('cartItems.product', 'cartItems.product.colors', 'cartItems.product.sizes','cartItems.product.images')
             ->first();
 
         if (!$cart) {
