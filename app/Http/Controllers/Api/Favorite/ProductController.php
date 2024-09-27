@@ -12,21 +12,18 @@ use App\Http\Resources\ProductResource;
 
 class ProductController extends AppController
 {
-    public function index()
+    public function index( )
     {
-        try {
-            $favoriteProducts = $this->getUserFavoriteProducts();
-            if ($favoriteProducts->isEmpty()) {
-                return $this->notFoundResponse('NO_FAVORITE_PRODUCTS');
+
+        $favoriteProducts = $this->getUserFavoriteProducts();
+            if ($favoriteProducts->isEmpty()) { 
+                $data = ['products'=> []];
+            }else{
+                 $data =['products'=> ProductResource::collection($favoriteProducts)];
             }
+            return $this->successResponse($data);
 
-            return $this->successResponse(['products'=>ProductResource::collection($favoriteProducts)]);
-        } catch (Exception $e) {
-            Log::error('Error during get favorite products process: ' . $e->getMessage());
-
-            return $this->genericErrorResponse();
         }
-    }
     private function getUserFavoriteProducts()
     {
         return Favorite::with('product')

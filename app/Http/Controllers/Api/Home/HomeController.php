@@ -20,24 +20,32 @@ class HomeController extends AppController
     public function __construct(Store $store, Product $product, Category $category)
     {
         parent::__construct();
-        $this->store = $store;
-        $this->product = $product;
+        $this->store    = $store;
+        $this->product  = $product;
         $this->category = $category;
     }
 
     public function index()
     {
-
         $topProducts = $this->getTopProducts($this->user->id);
-        $categories = $this->getCategory();
-        $topStores = $this->getTopStores();
+        $categories  = $this->getCategory(2);
+        $topStores   = $this->getTopStores(2);
         return $this->successResponse([
                 'bestSelling' => ProductResource::collection($topProducts),
-                'pagination' => $this->getPaginationData($topProducts),
-                'categories' => CategoryHomeResource::collection($categories),
-                'topStores' => StoreHomeResource::collection($topStores),
+                'pagination'  => $this->getPaginationData($topProducts),
+                'categories'  => CategoryHomeResource::collection($categories),
+                'topStores'   => StoreHomeResource::collection($topStores),
         ]);
 
+    }
+
+    public function searchData(){
+        $categories = $this->getCategory(6);
+        $topStores  = $this->getTopStores(6);
+        return $this->successResponse([
+            'topCategories' => CategoryHomeResource::collection($categories),
+            'topStores'     => StoreHomeResource::collection($topStores),
+    ]);
     }
 
     private function getTopProducts()
@@ -61,7 +69,7 @@ class HomeController extends AppController
         return $topProducts;
     }
 
-    private function getTopStores()
+    private function getTopStores($limit)
     {
         $topStores = $this->store::with('categories')
             ->join('category_store', 'stores.id', '=', 'category_store.store_id')
@@ -70,7 +78,7 @@ class HomeController extends AppController
             ->select('stores.*', DB::raw('COUNT(order_items.id) as total_products_ordered'))
             ->groupBy('stores.id', 'stores.name', 'stores.img', 'stores.created_at', 'stores.updated_at')
             ->orderByDesc('total_products_ordered')
-            ->limit(2)
+            ->limit($limit)
             ->get();
 
         if ($topStores->isEmpty()) {
@@ -80,9 +88,9 @@ class HomeController extends AppController
         return $topStores;
     }
 
-    private function getCategory()
+    private function getCategory($limit)
     {
-        $categories = $this->category::limit(2)->with('subCategories')->get();
+        $categories = $this->category::limit($limit)->with('subCategories')->get();
         if ($categories->isEmpty()) {
             return $this->notFoundResponse('NO_CATEGORIES');
         }

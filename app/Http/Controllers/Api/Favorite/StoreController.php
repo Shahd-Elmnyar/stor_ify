@@ -13,25 +13,14 @@ use App\Http\Resources\StoreResource;
 class StoreController extends AppController{
 public function index(Request $request)
 {
-    try {
         $favoriteStores = $this->getUserFavoriteStores();
         if ($favoriteStores->isEmpty()) {
-            $favoriteStores = [];
+            $data = ['stores' =>[]];
         }
-
-        $favoriteStores = $favoriteStores->filter(function ($store) {
-            return !is_null($store);
-        });
-
-        if ($favoriteStores->isEmpty()) {
-            $favoriteStores = [];
+        else{
+            $data =['stores' => StoreResource::collection($favoriteStores)];
         }
-
-        return $this->successResponse(['stores' => StoreResource::collection($favoriteStores)]);
-    } catch (Exception $e) {
-        Log::error('Error during get favorite stores process: ' . $e->getMessage());
-        return $this->genericErrorResponse();
-    }
+        return $this->successResponse($data);
 }
 
 
@@ -40,7 +29,8 @@ public function index(Request $request)
         return Favorite::with('store')
             ->where('user_id', $this->user->id)->with('store.categories')
             ->get()
-            ->pluck('store');
+            ->pluck('store')
+            ->filter();
     }
 
     public function store(Request $request)

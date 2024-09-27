@@ -55,6 +55,7 @@ Route::middleware('lang')->group(function () {
         Route::apiResource('favoritesStore', FavoriteStoreController::class)->only(['index', 'store', 'destroy']);
 
         Route::post('search', [ProductsProductController::class, 'search']);
+        Route::get('searchData', [HomeController::class, 'searchData']);
 
         Route::post('addProduct/{product_id}', [CartController::class, 'addProductToCart']);
         Route::get('/cart', [CartController::class, 'showCart']);
