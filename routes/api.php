@@ -67,6 +67,7 @@ Route::middleware('lang')->group(function () {
 
         Route::post('/change-lang', [langController::class, 'changeLang']);
         Route::apiResource('profile',ProfileController::class)->only('index' );
+        Route::post('profile/update',[ProfileController::class,'update']);
         Route::delete('/profile', [ProfileController::class, 'deleteAccount']);
         Route::post('/profile', [ProfileController::class, 'update']);
         Route::post('/profile/change-password', [ProfileController::class, 'changePassword']);

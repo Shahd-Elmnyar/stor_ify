@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\AppController;
+use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\UpdateProfileRequest;
 use Illuminate\Validation\ValidationException;
 
@@ -41,9 +42,22 @@ class ProfileController extends AppController
     }
 
 
-    public function update(UpdateProfileRequest $request): JsonResponse
+    public function update(Request $request): JsonResponse
     {
-        try {
+            $validator = Validator::make($request->all(), [
+                'username' => 'nullable|string|max:255',
+                'email' => 'nullable|email|unique:users,email,' . auth()->user()->id,
+                'img' => 'sometimes|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ], [
+                'email.email' => 'INVALID_EMAIL',
+                'email.unique' => 'USER_NOT_FOUND',
+                'img.image' => 'MUST_BE_IMAGE',
+                'img.mimes'=>'IMAGE_FORMAT_NOT_CORRECT'
+            ]);
+            if ($validator->fails()) {
+                return $this->validationErrorResponse($validator->errors()->first());
+            }
+// dd($validator);
             $userData = $this->extractUserData($request);
             if (!$this->hasUpdates($userData, $request)) {
                 return $this->successResponse( [
@@ -55,10 +69,6 @@ class ProfileController extends AppController
             return $this->successResponse( [
                 'user' => new UserResource($this->getUserData()),
             ]);
-        } catch (\Exception $e) {
-            Log::error('Error updating profile: ' . $e->getMessage());
-            return $this->genericErrorResponse();
-        }
     }
 
     private function extractUserData(Request $request): array
