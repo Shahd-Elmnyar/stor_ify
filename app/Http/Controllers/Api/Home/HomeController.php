@@ -71,7 +71,7 @@ class HomeController extends AppController
 
     private function getTopStores($limit)
     {
-        $topStores = $this->store::with('categories')
+        $topStores = $this->store::with('categories','rates')
             ->join('category_store', 'stores.id', '=', 'category_store.store_id')
             ->join('products', 'stores.id', '=', 'products.store_id')
             ->join('order_items', 'products.id', '=', 'order_items.product_id')
@@ -82,7 +82,7 @@ class HomeController extends AppController
             ->get();
 
         if ($topStores->isEmpty()) {
-            $topStores = $this->store::inRandomOrder()->limit(2)->get();
+            $topStores = $this->store::inRandomOrder()->limit($limit)->get();
         }
 
         return $topStores;

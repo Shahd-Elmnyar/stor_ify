@@ -30,14 +30,17 @@ class ForgetPasswordController extends Controller
                 );
             }
             $user = User::where('email', $request->email)->first();
+            
             if (!$user) {
                 return $this->notFoundResponse('USER_NOT_FOUND');
             }
-
+                                    
             $user->notify(new ResetPasswordVerificationNotification());
             return $this->successResponse();
         } catch (\Exception $e) {
-            Log::error('Error during forget password process: ' . $e->getMessage());
+            Log::error('Password reset failed: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
             return $this->genericErrorResponse();
         }
     }

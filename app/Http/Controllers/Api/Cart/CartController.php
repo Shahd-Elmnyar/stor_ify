@@ -93,16 +93,22 @@ class CartController extends AppController
             return $this->successResponse([
                 'cart' => [],
                 'totalItems' => 0,
+                'subTotalPrice'=>0,
+                'delivery'=>0,
                 'totalPrice' => 0.0
             ]);
         }
 
         $totalItems = $cart->cartItems->sum('quantity');
-        $totalPrice = $cart->total_price;
+        $subtotalPrice = $cart->total_price;
+        $delivery = 20 ;
+        $totalPrice = $subtotalPrice + $delivery;
 
         return $this->successResponse([
             'cart' => CartItemResource::collection($cart->cartItems),
             'totalItems' => $totalItems,
+            'subTotalPrice' => $subtotalPrice,
+            'delivery' => $delivery,
             'totalPrice' => $totalPrice
         ]);
     }

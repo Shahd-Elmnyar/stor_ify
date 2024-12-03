@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use Ichtrojan\Otp\Otp;
+use Illuminate\Support\Facades\Log;
 
 class ResetPasswordVerificationNotification extends Notification
 {
@@ -44,19 +45,35 @@ class ResetPasswordVerificationNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        // Change the second parameter to a valid type string, e.g., 'numeric'
-        $otp = $this->otp->generate($notifiable->email, 'numeric',4, 60);
+        // Add debug logging
+        Log::info('Attempting to generate OTP for email: ' . $notifiable->email);
+        
+        // Generate OTP
+        $otp = $this->otp->generate($notifiable->email, 'numeric', 4, 60);
+        
+        // Log the OTP response
+        Log::info('OTP generation response:', ['otp' => $otp]);
+        
+        // Check if OTP generation failed
+        if (!$otp) {
+            Log::error('OTP generation returned null for email: ' . $notifiable->email);
+            throw new \Exception('OTP generation failed - null response');
+        }
+        
+        if (!isset($otp->token)) {
+            Log::error('OTP generation returned invalid format for email: ' . $notifiable->email, [
+                'otp_object' => json_encode($otp)
+            ]);
+            throw new \Exception('OTP generation failed - invalid format');
+        }
+        
         return (new MailMessage)
                 ->mailer('smtp')
                 ->subject($this->subject)
-                ->view('emails.reset_password',[
+                ->view('emails.reset_password', [
                     'otp' => $otp->token,
                     'username' => $notifiable->username
                 ]);
-                // ->greeting('hello ' . $notifiable->username)
-                // ->line($this->message)
-                // ->line('code: ' . $otp->token)
-                // ->salutation('Best regards, Store-ify Team');
     }
 
     /**

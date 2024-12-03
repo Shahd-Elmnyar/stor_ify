@@ -18,16 +18,14 @@ class StoreController extends AppController
     public function getStores($categoryID = null)
     {
         try {
-
             $query = Store::query();
-
             if ($categoryID) {
                 $query->whereHas('categories', function ($q) use ($categoryID) {
                     $q->where('category_id', $categoryID);
                 });
             }
-
-            $stores = $query->with('categories')->paginate(6);
+            
+            $stores = $query->with('categories','rates')->paginate(6);
 
             return $this->successResponse([
                 'stores' => StoreResource::collection($stores),
